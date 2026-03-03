@@ -1,0 +1,401 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  ArrowUp, 
+  MapPin, 
+  Calendar, 
+  CheckCircle2, 
+  XCircle, 
+  Instagram, 
+  Facebook, 
+  Globe, 
+  Smartphone,
+  Play
+} from 'lucide-react';
+
+// --- DATA MOCKUP ---
+const tourData = {
+  title: "ELEGANCE IN ALPS",
+  subtitle: "Switzerland & Northern Italy Luxury Escape",
+  period: "Autumn / Winter 2024",
+  highlights: [
+    { label: "Duration", value: "10 Days" },
+    { label: "Group Size", value: "Max 12 Pax" },
+    { label: "Hotel", value: "5-Star Boutique" }
+  ],
+  itinerary: [
+    {
+      day: 1,
+      location: "Zurich to Lucerne",
+      title: "The Golden Arrival",
+      desc: "Tiba di Zurich, kami akan membawa Anda langsung menuju keajaiban danau Lucerne. Check-in di hotel bersejarah dengan pemandangan pegunungan Alpen yang memukau. Makan malam selamat datang di restoran Michelin-star lokal.",
+      img: "https://images.unsplash.com/photo-1527668752968-14dc70a27c95?q=80&w=1000&auto=format&fit=crop",
+      youtubeId: "yJg-Y5byMMw" // Generic ID
+    },
+    {
+      day: 2,
+      location: "Grindelwald First",
+      title: "Peaks of Europe",
+      desc: "Perjalanan dengan kereta panorama menuju Grindelwald. Rasakan sensasi berjalan di Cliff Walk. Sore hari bebas untuk menikmati spa atau berbelanja jam tangan mewah di Interlaken.",
+      img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1000&auto=format&fit=crop",
+      youtubeId: "yJg-Y5byMMw"
+    },
+    {
+      day: 3,
+      location: "Zermatt",
+      title: "Under the Matterhorn",
+      desc: "Menuju desa bebas mobil, Zermatt. Pemandangan ikonik Matterhorn menanti Anda. Nikmati hiking ringan atau ski musim dingin (tergantung musim).",
+      img: "https://images.unsplash.com/photo-1538332576228-eb5b4c4de6f5?q=80&w=1000&auto=format&fit=crop",
+      youtubeId: "yJg-Y5byMMw"
+    },
+    {
+      day: 4,
+      location: "Lake Como, Italy",
+      title: "La Dolce Vita",
+      desc: "Menyeberangi perbatasan menuju Italia. Private boat tour di Danau Como melihat villa selebriti dunia. Makan malam pizza otentik dan wine tasting.",
+      img: "https://images.unsplash.com/photo-1596484552993-9dd772d12d4a?q=80&w=1000&auto=format&fit=crop",
+      youtubeId: "yJg-Y5byMMw"
+    }
+  ],
+  dates: [
+    { date: "10 - 20 Oct 2024", status: "Available" },
+    { date: "05 - 15 Nov 2024", status: "Filling Fast" },
+    { date: "01 - 11 Dec 2024", status: "Sold Out" }
+  ],
+  pricing: {
+    amount: "IDR 45.000.000",
+    note: "per pax / twin share"
+  },
+  includes: [
+    "Tiket Pesawat PP (Full Service)",
+    "Akomodasi Hotel Bintang 5 (9 Malam)",
+    "Private Luxury Bus selama perjalanan",
+    "Tiket Masuk Wisata (Titlis, Como Boat)",
+    "Makan Pagi & Malam sesuai program",
+    "Dokumentasi Fotografer Profesional",
+    "Travel Insurance Covid-19 Cover"
+  ],
+  excludes: [
+    "Visa Schengen",
+    "Makan Siang (Free leisure)",
+    "Tipping Driver & Tour Leader",
+    "Pengeluaran Pribadi (Mini bar, Laundry)",
+    "Optional Tour"
+  ]
+};
+
+const App = () => {
+  const [showNav, setShowNav] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const heroRef = useRef(null);
+
+  // Scroll Handler for Navbar appearance
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const heroHeight = heroRef.current.offsetHeight;
+        setShowNav(window.scrollY > heroHeight - 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Smooth Scroll to Top
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-900 selection:bg-orange-200">
+      {/* Inject Fonts for Magazine Look */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Lato', sans-serif; }
+        
+        /* Smooth Fade In Animation */
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeInUp 1.2s ease-out forwards;
+        }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-700 { animation-delay: 0.7s; }
+      `}</style>
+
+      {/* --- SECTION 1: COVER (Full Frame Parallax) --- */}
+      <header 
+        ref={heroRef}
+        className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center text-center text-white"
+      >
+        {/* Parallax Background */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url('https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=2000&auto=format&fit=crop')`,
+            filter: 'brightness(0.7)' 
+          }}
+        />
+        
+        {/* Magazine Title Content */}
+        <div className="relative z-10 px-6 max-w-4xl">
+          <p className="text-sm md:text-lg tracking-[0.3em] uppercase mb-4 opacity-0 animate-fade-in font-sans">
+            The Digital Journal
+          </p>
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif italic mb-6 leading-tight opacity-0 animate-fade-in delay-300">
+            {tourData.title}
+          </h1>
+          <p className="text-xl md:text-2xl font-light tracking-wide mb-8 opacity-0 animate-fade-in delay-500 border-b pb-2 inline-block border-white/50">
+            {tourData.subtitle}
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-6 text-sm font-medium tracking-widest opacity-0 animate-fade-in delay-700">
+            {tourData.highlights.map((item, idx) => (
+              <span key={idx} className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                {item.value}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 animate-bounce">
+          <span className="text-xs tracking-widest uppercase mb-2 block opacity-70">Explore</span>
+          <ArrowUp className="rotate-180 w-6 h-6 mx-auto opacity-70" />
+        </div>
+      </header>
+
+      {/* --- SECTION 2: INTRODUCTION --- */}
+      <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
+        <h2 className="text-4xl md:text-5xl font-serif mb-8 text-stone-800">
+          A Journey Beyond Ordinary
+        </h2>
+        <p className="text-lg md:text-xl text-stone-600 leading-relaxed max-w-3xl mx-auto font-light">
+          "Bergabunglah bersama kami dalam perjalanan eksklusif melintasi jantung Eropa. 
+          Dari puncak bersalju Swiss Alps hingga kehangatan danau Italia, setiap detik dirancang 
+          untuk memberikan pengalaman visual dan emosional yang tak terlupakan. 
+          Ini bukan sekadar liburan, ini adalah sebuah cerita untuk masa depan Anda."
+        </p>
+      </section>
+
+      {/* --- SECTION 3: ITINERARY (Magazine Style) --- */}
+      <div className="bg-white">
+        {tourData.itinerary.map((item, index) => (
+          <section key={index} className="group relative w-full flex flex-col md:flex-row overflow-hidden border-b border-stone-100 last:border-0">
+            
+            {/* Visual Side (Alternating) */}
+            <div className={`w-full md:w-1/2 h-[50vh] md:h-screen relative overflow-hidden ${index % 2 === 1 ? 'md:order-2' : ''}`}>
+              <img 
+                src={item.img} 
+                alt={item.title} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              <div className="absolute bottom-6 right-6 z-10">
+                <a 
+                  href={`https://www.youtube.com/watch?v=${item.youtubeId}`} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="flex items-center gap-3 bg-white/90 hover:bg-white text-stone-900 px-5 py-3 rounded-full shadow-lg backdrop-blur transition-all transform hover:-translate-y-1"
+                >
+                  <Play size={18} fill="currentColor" />
+                  <span className="text-xs font-bold tracking-widest uppercase">Watch Highlights</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Text Side */}
+            <div className="w-full md:w-1/2 p-8 md:p-20 flex flex-col justify-center bg-stone-50">
+              <span className="text-orange-500 font-bold tracking-widest text-sm mb-4">DAY 0{item.day}</span>
+              <div className="flex items-center gap-2 text-stone-400 text-xs uppercase tracking-widest mb-6">
+                <MapPin size={14} /> {item.location}
+              </div>
+              <h3 className="text-4xl md:text-6xl font-serif text-stone-900 mb-8 leading-none">
+                {item.title}
+              </h3>
+              <p className="text-stone-600 leading-loose text-lg font-light">
+                {item.desc}
+              </p>
+            </div>
+          </section>
+        ))}
+      </div>
+
+      {/* --- SECTION 4: THE DECK (Dates, Price, Info) --- */}
+      <section className="bg-stone-900 text-stone-100 py-24 px-6 relative">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-center text-3xl md:text-5xl font-serif mb-16 italic text-orange-200">Plan Your Escape</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            
+            {/* Left Column: Dates & Price */}
+            <div className="space-y-10">
+              {/* Dates Card */}
+              <div className="bg-stone-800 p-8 rounded-none border border-stone-700">
+                <h4 className="flex items-center gap-3 text-xl font-serif mb-6 text-orange-100">
+                  <Calendar className="w-5 h-5" /> Departure Dates
+                </h4>
+                <div className="space-y-4">
+                  {tourData.dates.map((d, i) => (
+                    <div key={i} className="flex justify-between items-center border-b border-stone-700 pb-3 last:border-0">
+                      <span className="text-lg">{d.date}</span>
+                      <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider 
+                        ${d.status === 'Available' ? 'bg-emerald-900 text-emerald-300' : 
+                          d.status === 'Filling Fast' ? 'bg-orange-900 text-orange-300' : 
+                          'bg-red-900 text-red-300'}`}>
+                        {d.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Card */}
+              <div className="bg-stone-800 p-8 rounded-none border border-stone-700 text-center">
+                <p className="text-sm uppercase tracking-widest text-stone-400 mb-2">Starting From</p>
+                <div className="text-4xl md:text-5xl font-serif text-white mb-2">{tourData.pricing.amount}</div>
+                <p className="text-stone-400 italic text-sm">{tourData.pricing.note}</p>
+              </div>
+            </div>
+
+            {/* Right Column: Inclusions */}
+            <div className="space-y-8">
+              {/* Include */}
+              <div>
+                <h4 className="text-xl font-serif mb-6 text-emerald-400 flex items-center gap-2">
+                  <CheckCircle2 size={20} /> Price Includes
+                </h4>
+                <ul className="grid gap-3">
+                  {tourData.includes.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-stone-300 font-light">
+                      <span className="mt-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0"></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Exclude */}
+              <div>
+                <h4 className="text-xl font-serif mb-6 text-red-400 flex items-center gap-2">
+                  <XCircle size={20} /> Price Excludes
+                </h4>
+                <ul className="grid gap-3">
+                  {tourData.excludes.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-stone-400 font-light text-sm">
+                      <span className="mt-1.5 w-1.5 h-1.5 bg-red-500 rounded-full flex-shrink-0"></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          {/* T&C Mini */}
+          <div className="mt-16 pt-8 border-t border-stone-800 text-center text-stone-500 text-xs leading-relaxed max-w-2xl mx-auto">
+            <p className="mb-2 font-bold uppercase tracking-widest">Syarat & Ketentuan</p>
+            <p>Harga dapat berubah sewaktu-waktu mengikuti kurs mata uang asing dan ketersediaan seat penerbangan. Deposit sebesar IDR 5.000.000 (Non-refundable) diperlukan untuk mengamankan slot. Pelunasan wajib dilakukan H-30 keberangkatan.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* --- SECTION 5: BRAND PROFILE --- */}
+      <footer className="bg-stone-950 text-white py-20 px-6 text-center">
+        <div className="max-w-xl mx-auto">
+          <div className="mb-8 font-serif italic text-3xl">LuxeTravel Journal</div>
+          <p className="text-stone-400 mb-10 font-light">
+            Kami mengkurasi perjalanan terbaik untuk jiwa petualang yang menghargai kenyamanan dan estetika.
+          </p>
+          
+          <div className="flex justify-center gap-6 mb-12">
+            <SocialIcon icon={<Instagram />} label="Instagram" />
+            <SocialIcon icon={<Facebook />} label="Facebook" />
+            <SocialIcon icon={<Smartphone />} label="TikTok" />
+            <SocialIcon icon={<Globe />} label="Website" />
+          </div>
+
+          <p className="text-stone-600 text-xs">
+            © 2024 LuxeTravel Journal. All Rights Reserved.
+          </p>
+        </div>
+      </footer>
+
+      {/* --- BOTTOM NAVBAR (Sticky) --- */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-stone-200 transition-transform duration-500 ease-in-out px-6 py-4 flex justify-between items-center md:justify-center md:gap-12 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]
+        ${showNav ? 'translate-y-0' : 'translate-y-full'}`}
+      >
+        <button 
+          onClick={() => setLiked(!liked)}
+          className="flex flex-col items-center gap-1 group"
+        >
+          <Heart 
+            className={`w-6 h-6 transition-all duration-300 ${liked ? 'fill-red-500 text-red-500 scale-110' : 'text-stone-600 group-hover:text-red-400'}`} 
+          />
+          <span className="text-[10px] font-bold tracking-widest uppercase text-stone-500">Love</span>
+        </button>
+
+        <button className="flex flex-col items-center gap-1 group">
+          <Share2 className="w-6 h-6 text-stone-600 group-hover:text-stone-900 transition-colors" />
+          <span className="text-[10px] font-bold tracking-widest uppercase text-stone-500">Share</span>
+        </button>
+
+        <button 
+          className="flex flex-col items-center gap-1 group"
+          onClick={() => window.open('https://wa.me/', '_blank')}
+        >
+          <MessageCircle className="w-6 h-6 text-stone-600 group-hover:text-emerald-600 transition-colors" />
+          <span className="text-[10px] font-bold tracking-widest uppercase text-stone-500">Chat</span>
+        </button>
+
+        {/* CTA Button visible only on larger screens in the nav */}
+        <button className="hidden md:block bg-stone-900 text-white px-8 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-orange-600 transition-colors ml-8">
+          Book Now
+        </button>
+      </div>
+
+      {/* --- FLOATING ACTION BUTTONS --- */}
+      <div className="fixed bottom-24 right-6 z-40 flex flex-col gap-4">
+        {/* WhatsApp Float */}
+        <a 
+          href="https://wa.me/"
+          target="_blank"
+          rel="noreferrer"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-full shadow-xl transition-all hover:scale-110 flex items-center justify-center"
+          title="Chat WhatsApp"
+        >
+          <MessageCircle size={24} fill="currentColor" className="text-white" />
+        </a>
+
+        {/* Back to Top */}
+        <button 
+          onClick={scrollToTop}
+          className={`bg-white hover:bg-stone-100 text-stone-800 p-4 rounded-full shadow-xl border border-stone-200 transition-all duration-500 hover:scale-110
+          ${showNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+          title="Back to Top"
+        >
+          <ArrowUp size={24} />
+        </button>
+      </div>
+
+    </div>
+  );
+};
+
+// Helper Component for Footer Icons
+const SocialIcon = ({ icon, label }) => (
+  <a href="#" className="p-3 bg-stone-900 rounded-full text-stone-400 hover:bg-stone-800 hover:text-white transition-all group">
+    <div className="group-hover:scale-110 transition-transform">
+      {icon}
+    </div>
+    <span className="sr-only">{label}</span>
+  </a>
+);
+
+export default App;

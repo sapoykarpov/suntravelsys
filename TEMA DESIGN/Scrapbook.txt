@@ -1,0 +1,190 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  ArrowUp,
+  MapPin,
+  Camera,
+  Coffee,
+  Star,
+  Anchor
+} from 'lucide-react';
+
+const App = () => {
+  const [showNav, setShowNav] = useState(false);
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowNav(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const entries = [
+    {
+      day: 1,
+      title: "Pagi di Ubud",
+      location: "Tegalalang, Bali",
+      desc: "Menghirup udara pagi di terasering sawah. Aroma kopi Bali dan suara alam yang menenangkan. Awal yang sempurna untuk sebuah cerita.",
+      img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&q=80&w=600",
+      rotation: "-2deg",
+      icon: <Coffee className="text-amber-900/40" size={32} />
+    },
+    {
+      day: 2,
+      title: "Ritual Suci",
+      location: "Tirta Empul",
+      desc: "Melihat langsung prosesi penyucian diri yang magis. Cahaya matahari menembus sela-sela gapura batu tua, menciptakan suasana sakral.",
+      img: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?auto=format&fit=crop&q=80&w=600",
+      rotation: "3deg",
+      icon: <Star className="text-yellow-600/40" size={32} />
+    },
+    {
+      day: 3,
+      title: "Tari di Atas Tebing",
+      location: "Uluwatu",
+      desc: "Menutup hari dengan pertunjukan Kecak saat matahari terbenam. Samudra Hindia membentang luas, memberikan perspektif baru tentang kebebasan.",
+      img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&q=80&w=600",
+      rotation: "-1deg",
+      icon: <Anchor className="text-blue-900/40" size={32} />
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFCF8] text-[#3D3D3D] pb-32 relative font-serif">
+      {/* Google Fonts Import */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        .font-hand { font-family: 'Caveat', cursive; }
+        .font-journal { font-family: 'Lora', serif; }
+
+        .polaroid-frame {
+          background: white;
+          padding: 12px 12px 48px 12px;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+          border: 1px solid #EAEAEA;
+        }
+
+        .washi-tape {
+          background: rgba(186, 73, 73, 0.3);
+          width: 80px;
+          height: 25px;
+          transform: rotate(-3deg);
+          backdrop-filter: blur(1px);
+        }
+      `}</style>
+
+      {/* Hero Header */}
+      <header className="pt-20 pb-16 px-6 text-center relative max-w-2xl mx-auto">
+        <div className="mx-auto washi-tape mb-4"></div>
+        <h1 className="font-hand text-6xl md:text-7xl text-[#BA4949] mb-2 leading-none">Bali Journal</h1>
+        <p className="font-journal italic text-stone-400 text-lg uppercase tracking-widest">Digital Escape Series</p>
+      </header>
+
+      {/* Scrapbook Content */}
+      <main className="max-w-xl mx-auto px-6 space-y-24">
+        {entries.map((item, idx) => (
+          <div 
+            key={idx} 
+            className="relative" 
+            style={{ transform: `rotate(${item.rotation})` }}
+          >
+            {/* Decoration Icon */}
+            <div className="absolute -top-6 -right-2 z-10 rotate-12">
+              {item.icon}
+            </div>
+
+            {/* Polaroid Component */}
+            <div className="polaroid-frame transition-transform hover:rotate-0 duration-500 cursor-pointer">
+              <img 
+                src={item.img} 
+                alt={item.title} 
+                className="w-full aspect-square object-cover mb-4 grayscale-[20%] hover:grayscale-0 transition-all"
+              />
+              <div className="font-hand text-2xl text-stone-300">#Day0{item.day}</div>
+            </div>
+
+            {/* Journal Note */}
+            <div className="mt-8 px-2">
+              <div className="flex items-center gap-2 text-[#BA4949] text-xs font-bold uppercase tracking-widest mb-3">
+                <MapPin size={14} /> {item.location}
+              </div>
+              <h2 className="font-journal text-2xl font-bold mb-4 text-[#2D2D2D] underline decoration-stone-200 underline-offset-8">
+                {item.title}
+              </h2>
+              <p className="font-journal text-lg leading-relaxed text-stone-600 first-letter:text-4xl first-letter:font-hand first-letter:mr-1 first-letter:text-[#BA4949]">
+                {item.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </main>
+
+      {/* Ticket/Deck Section */}
+      <section className="mt-32 px-6 max-w-lg mx-auto">
+        <div className="bg-[#FFFDF5] border-2 border-dashed border-stone-200 p-8 rounded-xl shadow-sm relative">
+           {/* Notches for Ticket Effect */}
+           <div className="absolute -left-4 top-1/2 w-8 h-8 bg-[#FDFCF8] rounded-full border-r-2 border-stone-200 -translate-y-1/2"></div>
+           <div className="absolute -right-4 top-1/2 w-8 h-8 bg-[#FDFCF8] rounded-full border-l-2 border-stone-200 -translate-y-1/2"></div>
+           
+           <h3 className="font-hand text-4xl text-center text-[#BA4949] mb-6">Informasi Perjalanan</h3>
+           
+           <div className="space-y-4 font-journal text-sm text-stone-600">
+             <div className="flex justify-between border-b border-stone-100 pb-2">
+               <span>Investasi</span>
+               <span className="font-bold text-stone-900">IDR 12.500.000 / Pax</span>
+             </div>
+             <div className="flex justify-between border-b border-stone-100 pb-2">
+               <span>Akomodasi</span>
+               <span className="font-bold text-stone-900">Eco-Luxury Boutique</span>
+             </div>
+             <div className="flex justify-between">
+               <span>Periode</span>
+               <span className="font-bold text-stone-900">Agustus - Sept 2024</span>
+             </div>
+           </div>
+
+           <button className="w-full mt-10 bg-[#BA4949] text-white py-4 font-hand text-2xl rounded-lg shadow-md hover:bg-[#A13C3C] transition-all transform hover:-translate-y-1">
+             Tanyakan Detailnya
+           </button>
+        </div>
+      </section>
+
+      {/* Bottom Floating Nav */}
+      <div className={`fixed bottom-8 inset-x-0 px-6 z-50 transition-all duration-500 ${showNav ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
+        <div className="bg-white/90 backdrop-blur-md border border-stone-200 p-2 rounded-full shadow-2xl flex justify-between items-center max-w-xs mx-auto">
+          <button 
+            onClick={() => setLiked(!liked)}
+            className={`p-3 transition-colors ${liked ? 'text-red-500' : 'text-stone-400'}`}
+          >
+            <Heart size={22} fill={liked ? "currentColor" : "none"} />
+          </button>
+          
+          <button className="bg-[#BA4949] text-white px-8 py-2 rounded-full font-hand text-2xl shadow-lg">
+            Ayo Jalan!
+          </button>
+
+          <button className="p-3 text-stone-400" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+            <ArrowUp size={22} />
+          </button>
+        </div>
+      </div>
+
+      {/* Floating WhatsApp */}
+      <a 
+        href="https://wa.me/"
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-8 right-6 w-14 h-14 bg-[#25D366] rounded-2xl flex items-center justify-center text-white shadow-xl z-40 hover:rotate-12 transition-transform"
+      >
+        <MessageCircle size={28} fill="currentColor" />
+      </a>
+    </div>
+  );
+};
+
+export default App;

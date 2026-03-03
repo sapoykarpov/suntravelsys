@@ -1,0 +1,266 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  ArrowUp, 
+  Calendar, 
+  Clock, 
+  Users, 
+  Hotel, 
+  Check, 
+  X, 
+  Instagram, 
+  Twitter, 
+  Youtube,
+  ExternalLink,
+  ChevronRight
+} from 'lucide-react';
+
+const BentoItinerary = () => {
+  const [showNav, setShowNav] = useState(false);
+  const [activeDay, setActiveDay] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowNav(window.scrollY > 400);
+    };
+    window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const tourInfo = {
+    name: "Tokyo-Osaka Modern Escape",
+    duration: "7 Days / 6 Nights",
+    price: "IDR 28.500.000",
+    highlights: ["Shinkansen Experience", "DisneySea", "Universal Studio", "Kyoto Zen Garden"],
+    itinerary: [
+      { day: 1, title: "Arrival Tokyo", detail: "Check-in at Shinjuku Hotel, Evening at Omoide Yokocho.", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=600" },
+      { day: 2, title: "Cyberpunk Shibuya", detail: "Shibuya Crossing, Hachiko, and Sky Deck observation.", img: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&q=80&w=600" },
+      { day: 3, title: "Mount Fuji Day Trip", detail: "Kawaguchiko Lake and Oishi Park view points.", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=600" },
+    ]
+  };
+
+  return (
+    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] p-4 md:p-8 font-sans">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .bento-card {
+          background: white;
+          border-radius: 24px;
+          padding: 24px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid rgba(0,0,0,0.05);
+        }
+        .bento-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        }
+      `}</style>
+
+      {/* --- HERO SECTION --- */}
+      <header className="max-w-7xl mx-auto mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Main Title Card */}
+          <div className="md:col-span-3 bento-card bg-black text-white flex flex-col justify-end min-h-[400px] relative overflow-hidden group">
+            <img 
+              src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1200" 
+              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+              alt="Japan Hero"
+            />
+            <div className="relative z-10">
+              <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold mb-4 inline-block">SPRING EDITION 2024</span>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{tourInfo.name}</h1>
+              <p className="text-white/70 max-w-xl">Menjelajahi harmoni antara teknologi masa depan dan tradisi kuno di jantung Jepang.</p>
+            </div>
+          </div>
+
+          {/* Quick Info Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
+            <div className="bento-card flex flex-col justify-center items-center text-center">
+              <Clock className="mb-2 text-blue-500" />
+              <span className="text-xs text-stone-500 uppercase font-bold tracking-tighter">Durasi</span>
+              <span className="text-lg font-bold">{tourInfo.duration}</span>
+            </div>
+            <div className="bento-card flex flex-col justify-center items-center text-center bg-blue-50 border-blue-100">
+              <Users className="mb-2 text-blue-600" />
+              <span className="text-xs text-blue-500 uppercase font-bold tracking-tighter">Grup Size</span>
+              <span className="text-lg font-bold">15 Pax</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* --- BENTO CONTENT GRID --- */}
+      <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4">
+        
+        {/* Price Card */}
+        <div className="md:col-span-4 bento-card flex flex-col justify-between bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+          <span className="text-white/70 text-sm font-medium">Investasi Perjalanan</span>
+          <div>
+            <h2 className="text-4xl font-bold mb-1">{tourInfo.price}</h2>
+            <p className="text-white/60 text-xs italic">Sudah termasuk tiket pesawat & hotel bintang 4</p>
+          </div>
+          <button className="mt-6 bg-white text-blue-600 w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-stone-100 transition-colors">
+            Book My Slot <ChevronRight size={18} />
+          </button>
+        </div>
+
+        {/* Calendar / Dates Card */}
+        <div className="md:col-span-5 bento-card">
+          <h3 className="font-bold flex items-center gap-2 mb-6">
+            <Calendar size={18} className="text-blue-500" /> Keberangkatan 2024
+          </h3>
+          <div className="space-y-3">
+            {[
+              { date: "15 - 21 Maret", status: "Full", color: "text-red-500 bg-red-50" },
+              { date: "10 - 16 April", status: "2 Seat Left", color: "text-orange-500 bg-orange-50" },
+              { date: "12 - 18 Mei", status: "Available", color: "text-emerald-500 bg-emerald-50" }
+            ].map((d, i) => (
+              <div key={i} className="flex items-center justify-between p-3 border border-stone-100 rounded-xl">
+                <span className="font-medium">{d.date}</span>
+                <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-md ${d.color}`}>{d.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Accommodation Card */}
+        <div className="md:col-span-3 bento-card flex flex-col items-center justify-center gap-4 text-center">
+          <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center">
+            <Hotel className="text-blue-500" size={32} />
+          </div>
+          <div>
+            <h4 className="font-bold">Premium Stay</h4>
+            <p className="text-sm text-stone-500 leading-tight">Citadines Shinjuku / Setara</p>
+          </div>
+          <div className="flex gap-1 text-orange-400">
+            {[...Array(4)].map((_, i) => <span key={i}>★</span>)}
+          </div>
+        </div>
+
+        {/* ITINERARY INTERACTIVE GRID */}
+        <div className="md:col-span-8 bento-card">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-bold">Rute Perjalanan</h3>
+            <div className="flex gap-2">
+              {tourInfo.itinerary.map((_, i) => (
+                <button 
+                  key={i}
+                  onClick={() => setActiveDay(i)}
+                  className={`w-10 h-10 rounded-full font-bold transition-all ${activeDay === i ? 'bg-blue-600 text-white' : 'bg-stone-100 text-stone-400 hover:bg-stone-200'}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div className="rounded-2xl overflow-hidden aspect-video relative">
+              <img 
+                src={tourInfo.itinerary[activeDay].img} 
+                className="absolute inset-0 w-full h-full object-cover animate-in fade-in zoom-in duration-500" 
+                alt="Itinerary"
+              />
+            </div>
+            <div className="space-y-4">
+              <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">Day 0{activeDay + 1}</span>
+              <h4 className="text-2xl font-bold">{tourInfo.itinerary[activeDay].title}</h4>
+              <p className="text-stone-500 text-sm leading-relaxed">{tourInfo.itinerary[activeDay].detail}</p>
+              <div className="flex gap-4 pt-4 border-t border-stone-100">
+                <div className="text-xs text-stone-400 font-medium italic underline flex items-center gap-1 cursor-pointer">
+                  <Youtube size={14} /> Preview Video
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Include/Exclude Mini Grid */}
+        <div className="md:col-span-4 grid grid-cols-1 gap-4">
+          <div className="bento-card bg-emerald-50 border-emerald-100 p-5">
+            <h5 className="font-bold text-emerald-700 text-sm mb-3 flex items-center gap-2">
+              <Check size={16} /> Fasilitas Include
+            </h5>
+            <ul className="text-xs space-y-2 text-emerald-800/80 font-medium">
+              <li>• Tiket Pesawat JAL PP</li>
+              <li>• JR Pass Shinkansen</li>
+              <li>• Breakfast & Dinner</li>
+            </ul>
+          </div>
+          <div className="bento-card bg-red-50 border-red-100 p-5">
+            <h5 className="font-bold text-red-700 text-sm mb-3 flex items-center gap-2">
+              <X size={16} /> Belum Termasuk
+            </h5>
+            <ul className="text-xs space-y-2 text-red-800/80 font-medium">
+              <li>• Visa Jepang</li>
+              <li>• Tipping & Personal</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Brand Profile Card */}
+        <div className="md:col-span-12 bento-card flex flex-col md:flex-row items-center justify-between gap-6 py-6 px-10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">T</div>
+            <div>
+              <h5 className="font-bold">TechTravel ID</h5>
+              <p className="text-xs text-stone-500">Luxury Travel Architect since 2018</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            {[<Instagram />, <Twitter />, <MessageCircle />, <ExternalLink />].map((icon, idx) => (
+              <button key={idx} className="w-10 h-10 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:bg-stone-900 hover:text-white transition-all">
+                {React.cloneElement(icon, { size: 18 })}
+              </button>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      {/* --- SPACER FOR BOTTOM NAV --- */}
+      <div className="h-32"></div>
+
+      {/* --- BOTTOM NAVBAR (Sticky) --- */}
+      <div 
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 
+        ${showNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20 pointer-events-none'}`}
+      >
+        <div className="bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl rounded-full px-6 py-3 flex items-center gap-8">
+          <button className="flex items-center gap-2 text-stone-600 hover:text-red-500 transition-colors">
+            <Heart size={20} /> <span className="text-[10px] font-bold uppercase hidden md:inline">Wishlist</span>
+          </button>
+          <div className="w-[1px] h-6 bg-stone-200"></div>
+          <button className="flex items-center gap-2 text-stone-600 hover:text-blue-500 transition-colors">
+            <Share2 size={20} /> <span className="text-[10px] font-bold uppercase hidden md:inline">Share</span>
+          </button>
+          <div className="w-[1px] h-6 bg-stone-200"></div>
+          <button className="bg-blue-600 text-white px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+            Book Now
+          </button>
+        </div>
+      </div>
+
+      {/* --- FLOATING ACTIONS --- */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`w-12 h-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-stone-800 border border-stone-100 transition-all ${showNav ? 'scale-100' : 'scale-0'}`}
+        >
+          <ArrowUp size={20} />
+        </button>
+        <a 
+          href="https://wa.me/"
+          className="w-12 h-12 bg-[#25D366] rounded-2xl shadow-xl flex items-center justify-center text-white transition-all hover:rotate-12"
+        >
+          <MessageCircle size={24} fill="currentColor" />
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default BentoItinerary;

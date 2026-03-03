@@ -1,0 +1,221 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Map as MapIcon, 
+  Navigation, 
+  MapPin, 
+  ChevronRight, 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  ArrowUp,
+  Camera,
+  Coffee,
+  Moon
+} from 'lucide-react';
+
+const MapItinerary = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const containerRef = useRef(null);
+
+  const locations = [
+    {
+      id: 1,
+      name: "Labuan Bajo",
+      activity: "Sunset Dinner",
+      desc: "Memulai petualangan dari pelabuhan Bajo dengan kapal Phinisi mewah.",
+      coords: { x: 20, y: 80 },
+      icon: <Coffee size={16} />
+    },
+    {
+      id: 2,
+      name: "Pulau Padar",
+      activity: "Morning Trekking",
+      desc: "Hiking menuju puncak tertinggi untuk melihat tiga warna pantai yang ikonik.",
+      coords: { x: 45, y: 50 },
+      icon: <Camera size={16} />
+    },
+    {
+      id: 3,
+      name: "Pink Beach",
+      activity: "Snorkeling",
+      desc: "Berenang di antara terumbu karang dengan pasir pantai berwarna pink alami.",
+      coords: { x: 60, y: 30 },
+      icon: <Navigation size={16} />
+    },
+    {
+      id: 4,
+      name: "Pulau Komodo",
+      activity: "Wildlife Encounter",
+      desc: "Melihat langsung naga purba Komodo di habitat aslinya bersama Ranger.",
+      coords: { x: 85, y: 20 },
+      icon: <MapPin size={16} />
+    }
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const element = containerRef.current;
+      if (element) {
+        const scrollTop = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / maxScroll) * 100;
+        setScrollProgress(progress);
+        
+        // Update active step based on scroll
+        const step = Math.min(Math.floor((progress / 100) * locations.length), locations.length - 1);
+        setActiveStep(step);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#fcfaf2] text-[#2c2c2c] font-sans overflow-x-hidden" ref={containerRef}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syne:wght@400;700;800&display=swap');
+        .font-syne { font-family: 'Syne', sans-serif; }
+        .font-space { font-family: 'Space Grotesk', sans-serif; }
+        
+        .map-bg {
+          background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+
+        .path-draw {
+          stroke-dasharray: 1000;
+          stroke-dashoffset: ${1000 - (scrollProgress * 10)};
+          transition: stroke-dashoffset 0.1s ease-out;
+        }
+      `}</style>
+
+      {/* --- FLOATING MAP CANVAS (Fixed Background) --- */}
+      <div className="fixed inset-0 z-0 opacity-40 map-bg pointer-events-none" />
+      
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-[16/9] z-0 opacity-20 pointer-events-none md:block hidden">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <path 
+            d="M 20 80 Q 30 60 45 50 T 60 30 T 85 20" 
+            fill="none" 
+            stroke="#1d4ed8" 
+            strokeWidth="0.5" 
+            className="path-draw"
+          />
+          {locations.map((loc) => (
+            <circle key={loc.id} cx={loc.coords.x} cy={loc.coords.y} r="1" fill="#1d4ed8" />
+          ))}
+        </svg>
+      </div>
+
+      {/* --- HERO --- */}
+      <section className="relative h-[80vh] flex flex-col items-center justify-center text-center px-6 z-10">
+        <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-xs font-bold mb-6 tracking-tighter">
+          <Navigation size={14} /> EXPLORER'S ROUTE 2024
+        </div>
+        <h1 className="text-6xl md:text-8xl font-syne font-extrabold tracking-tighter mb-4 uppercase">
+          Wonders of <br /> <span className="text-blue-600">Komodo</span>
+        </h1>
+        <p className="font-space text-lg text-stone-500 max-w-xl italic">
+          Sebuah ekspedisi melintasi kepulauan tropis, mengikuti jejak naga dan keindahan bawah laut Flores.
+        </p>
+      </section>
+
+      {/* --- SCROLLABLE CONTENT --- */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 space-y-[40vh] pb-[20vh]">
+        {locations.map((loc, index) => (
+          <div 
+            key={loc.id}
+            className={`flex flex-col md:flex-row items-center gap-12 transition-all duration-700 ${activeStep === index ? 'opacity-100 scale-100' : 'opacity-30 scale-95 blur-sm'}`}
+          >
+            {/* Visual Block */}
+            <div className="w-full md:w-1/2 aspect-square bg-stone-200 rounded-[40px] overflow-hidden relative shadow-2xl">
+              <div className="absolute top-6 left-6 z-20 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm">
+                <span className="font-syne font-bold text-blue-600 italic">Day 0{loc.id}</span>
+              </div>
+              <img 
+                src={`https://images.unsplash.com/photo-${1500000000000 + (index * 1000)}?auto=format&fit=crop&q=80&w=800`} 
+                alt={loc.name}
+                className="w-full h-full object-cover"
+                onError={(e) => e.target.src = "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?auto=format&fit=crop&q=80&w=800"}
+              />
+              <div className="absolute bottom-0 inset-x-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
+                <div className="flex items-center gap-2 text-sm font-space opacity-90 uppercase tracking-widest">
+                  {loc.icon} {loc.activity}
+                </div>
+              </div>
+            </div>
+
+            {/* Info Block */}
+            <div className="w-full md:w-1/2 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-[1px] bg-blue-600" />
+                <span className="font-space font-bold text-blue-600 uppercase tracking-widest text-xs">Destination Profile</span>
+              </div>
+              <h2 className="text-5xl font-syne font-bold tracking-tighter">{loc.name}</h2>
+              <p className="font-space text-lg text-stone-600 leading-relaxed">
+                {loc.desc}
+              </p>
+              <button className="flex items-center gap-2 font-syne font-bold text-blue-600 group">
+                LEARN MORE <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* --- PRICE DECK --- */}
+      <section className="relative z-10 bg-[#1a1a1a] text-white py-24 rounded-t-[60px] shadow-[0_-20px_50px_rgba(0,0,0,0.1)]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h3 className="text-4xl font-syne font-bold mb-12 italic">The Expedition Package</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div className="border border-white/10 p-10 rounded-[30px] hover:bg-white/5 transition-colors">
+              <p className="text-blue-400 font-space text-sm font-bold uppercase tracking-widest mb-2">Price Per Pax</p>
+              <h4 className="text-5xl font-syne font-bold tracking-tighter mb-4">IDR 18.900K</h4>
+              <p className="text-stone-400 text-sm font-space italic">Minimal keberangkatan 4 orang. Private charter tersedia berdasarkan permintaan.</p>
+            </div>
+            <div className="space-y-4 flex flex-col justify-center">
+              <div className="flex items-center gap-4 text-stone-300 font-space uppercase text-xs tracking-widest font-bold">
+                <Moon size={16} className="text-blue-400" /> 4 Days / 3 Nights
+              </div>
+              <div className="flex items-center gap-4 text-stone-300 font-space uppercase text-xs tracking-widest font-bold">
+                <MapPin size={16} className="text-blue-400" /> Start/End Labuan Bajo
+              </div>
+              <button className="w-full bg-blue-600 py-5 rounded-2xl font-syne font-bold text-sm tracking-[0.2em] uppercase hover:bg-blue-500 transition-all mt-4">
+                Inquire Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- BOTTOM NAVBAR --- */}
+      <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-700 ${scrollProgress > 5 ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0'}`}>
+        <div className="bg-white/90 backdrop-blur-2xl border border-stone-200 px-8 py-4 rounded-full shadow-2xl flex items-center gap-10">
+          <button className="flex flex-col items-center group">
+            <Heart size={20} className="text-stone-400 group-hover:text-red-500 transition-colors" />
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-tighter">Like</span>
+          </button>
+          <button className="flex flex-col items-center group">
+            <Share2 size={20} className="text-stone-400 group-hover:text-blue-500 transition-colors" />
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-tighter">Share</span>
+          </button>
+          <button className="bg-blue-600 text-white px-8 py-2 rounded-full font-syne font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-200 hover:scale-105 transition-transform">
+            Book Now
+          </button>
+        </div>
+      </div>
+
+      {/* WhatsApp Float */}
+      <a 
+        href="https://wa.me/"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] rounded-2xl flex items-center justify-center text-white shadow-xl z-50 hover:rotate-12 transition-transform"
+      >
+        <MessageCircle size={28} fill="currentColor" />
+      </a>
+    </div>
+  );
+};
+
+export default MapItinerary;

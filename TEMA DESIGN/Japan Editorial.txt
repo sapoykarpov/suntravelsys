@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyoto to Tokyo — 7 Days</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg: #fafafa;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --text-lighter: #999;
+            --accent: #c9a962;
+            --line: #e5e5e5;
+            --surface: #fff;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* TYPOGRAPHY SCALE */
+        .display {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(40px, 8vw, 72px);
+            line-height: 1.1;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+        
+        .headline {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(28px, 5vw, 42px);
+            line-height: 1.2;
+            font-weight: 400;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+        
+        .body-large {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+        
+        .body {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+        
+        .caption {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-lighter);
+        }
+        
+        /* HEADER */
+        .header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .menu-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        
+        .menu-btn span {
+            display: block;
+            height: 1px;
+            background: var(--text);
+            transition: all 0.3s;
+        }
+        
+        .menu-btn span:first-child { width: 100%; }
+        .menu-btn span:last-child { width: 60%; }
+        
+        .menu-btn:hover span:last-child { width: 100%; }
+        
+        /* HERO */
+        .hero {
+            padding: 60px 24px 40px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-lighter);
+        }
+        
+        .meta-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .hero-title {
+            margin-bottom: 32px;
+        }
+        
+        .hero-title em {
+            color: var(--accent);
+            font-style: italic;
+        }
+        
+        .hero-intro {
+            max-width: 540px;
+        }
+        
+        /* QUICK NAV */
+        .quick-nav {
+            padding: 0 24px 40px;
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .quick-nav::-webkit-scrollbar { display: none; }
+        
+        .nav-pill {
+            padding: 10px 20px;
+            border: 1px solid var(--line);
+            border-radius: 100px;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--surface);
+            text-decoration: none;
+            color: var(--text);
+        }
+        
+        .nav-pill:hover, .nav-pill.active {
+            background: var(--text);
+            color: var(--bg);
+            border-color: var(--text);
+        }
+        
+        /* IMAGE GALLERY */
+        .gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2px;
+            background: var(--line);
+            margin-bottom: 60px;
+        }
+        
+        .gallery-main {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .gallery:hover .gallery-main img {
+            transform: scale(1.02);
+        }
+        
+        .gallery-side {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+        }
+        
+        .gallery-thumb {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        
+        .gallery-thumb:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-more {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* LIGHTBOX */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            object-fit: contain;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        /* SECTIONS */
+        .section {
+            padding: 60px 24px;
+            max-width: 680px;
+            margin: 0 auto;
+            border-top: 1px solid var(--line);
+        }
+        
+        .section-header {
+            margin-bottom: 40px;
+        }
+        
+        .section-caption {
+            margin-bottom: 12px;
+        }
+        
+        /* COLLAPSIBLE DAYS */
+        .day-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .day-item {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--surface);
+            transition: box-shadow 0.3s;
+        }
+        
+        .day-item:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        
+        .day-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .day-header:hover {
+            background: rgba(0,0,0,0.02);
+        }
+        
+        .day-number {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Crimson Text', serif;
+            font-size: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        
+        .day-item.active .day-number {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        
+        .day-info {
+            flex: 1;
+        }
+        
+        .day-title {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .day-summary {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .day-toggle {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        
+        .day-item.active .day-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .day-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .day-item.active .day-content {
+            max-height: 2000px;
+        }
+        
+        .day-inner {
+            padding: 0 24px 24px;
+        }
+        
+        .activity {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        .activity:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-time {
+            width: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+        
+        .activity-content h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .activity-content p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .activity-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        
+        /* MAP SECTION */
+        .map-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+        
+        .map-frame {
+            width: 100%;
+            height: 400px;
+            border: none;
+            filter: grayscale(100%) contrast(1.1);
+        }
+        
+        .map-locations {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .location-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .location-item:hover {
+            background: var(--bg);
+        }
+        
+        .location-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .location-dot.visited {
+            background: var(--line);
+        }
+        
+        .location-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .location-day {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-lighter);
+        }
+        
+        /* INCLUSIONS */
+        .inclusion-grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .inclusion-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--line);
+        }
+        
+        .inclusion-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .inclusion-text h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .inclusion-text p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        /* PRICE STICKY */
+        .price-sticky {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 99;
+        }
+        
+        .price-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .price-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-lighter);
+        }
+        
+        .price-value {
+            font-family: 'Crimson Text', serif;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .price-value span {
+            font-size: 14px;
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+        
+        .book-btn {
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .book-btn:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+        
+        /* AGENT FOOTER */
+        .agent-section {
+            padding: 60px 24px;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            margin-bottom: 80px;
+        }
+        
+        .agent-card {
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .agent-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .agent-details p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        
+        .agent-contact {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+        }
+        
+        .agent-contact a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        /* SPACING FOR STICKY BAR */
+        .page-spacer {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">Wanderlust.</div>
+        <div class="menu-btn">
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-meta">
+            <div class="meta-item">
+                <span class="meta-label">Duration</span>
+                <span class="meta-value">7 Days 6 Nights</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Route</span>
+                <span class="meta-value">Kyoto → Osaka → Tokyo</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Group</span>
+                <span class="meta-value">Max 12 Travelers</span>
+            </div>
+        </div>
+        
+        <h1 class="hero-title display">
+            The Art of <em>Japanese</em> Slow Travel
+        </h1>
+        
+        <p class="hero-intro body-large">
+            Dari keheningan kuil Kyoto hingga energi tak terduga Shibuya. 
+            Sebuah perjalanan yang dirancang untuk mereka yang percaya 
+            bahwa perjalanan terbaik adalah yang tidak terburu-buru.
+        </p>
+    </section>
+    
+    <!-- QUICK NAV -->
+    <nav class="quick-nav">
+        <a href="#overview" class="nav-pill active">Overview</a>
+        <a href="#itinerary" class="nav-pill">Itinerary</a>
+        <a href="#map" class="nav-pill">Route Map</a>
+        <a href="#includes" class="nav-pill">What's Included</a>
+    </nav>
+    
+    <!-- IMAGE GALLERY -->
+    <div class="gallery" id="gallery">
+        <div class="gallery-main" onclick="openLightbox(0)">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800" alt="Kyoto Temple">
+        </div>
+        <div class="gallery-side">
+            <div class="gallery-thumb" onclick="openLightbox(1)">
+                <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400" alt="Tokyo Street">
+            </div>
+            <div class="gallery-thumb" onclick="openLightbox(2)">
+                <img src="https://images.unsplash.com/photo-1578469550956-0e16b69c6a3d?w=400" alt="Japanese Food">
+                <div class="gallery-more">+8 more</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close">×</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    </div>
+    
+    <!-- OVERVIEW -->
+    <section class="section" id="overview">
+        <div class="section-header">
+            <p class="section-caption caption">The Experience</p>
+            <h2 class="headline">Tidak Ada yang Terlewatkan,<br>Tidak Ada yang Terburu-buru</h2>
+        </div>
+        
+        <p class="body" style="margin-bottom: 24px;">
+            Kami merancang perjalanan ini berdasarkan prinsip <em>ichi-go ichi-e</em> — 
+            "sekali dalam seumur hidup." Setiap momen adalah kesempatan unik yang tidak akan terulang.
+        </p>
+        
+        <p class="body">
+            Menginap di ryokan bersejarah, belajar membuat sushi dari master chef, 
+            berjalan di antara ribuan torii gate merah, dan menyaksikan sunset dari 
+            rooftop bar tersembunyi di Tokyo.
+        </p>
+    </section>
+    
+    <!-- ITINERARY -->
+    <section class="section" id="itinerary">
+        <div class="section-header">
+            <p class="section-caption caption">Day by Day</p>
+            <h2 class="headline">Your Journey Unfolds</h2>
+        </div>
+        
+        <div class="day-list">
+            <!-- DAY 1 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">01</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Arrival in Kyoto</h3>
+                        <p class="day-summary">Airport pickup • Check-in • Welcome dinner</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">14:00</div>
+                            <div class="activity-content">
+                                <h4>Kansai International Airport</h4>
+                                <p>Penjemputan dengan private car. Welcome kit berisi pocket WiFi, maps, dan snack lokal.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">16:00</div>
+                            <div class="activity-content">
+                                <h4>Check-in: Hoshinoya Kyoto</h4>
+                                <p>Ryokan mewah di tepi sungai dengan private onsen di setiap kamar.</p>
+                                <img class="activity-img" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600" alt="Ryokan">
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">19:00</div>
+                            <div class="activity-content">
+                                <h4>Kaiseki Welcome Dinner</h4>
+                                <p>Multi-course dinner tradisional dengan bahan musiman terbaik.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 2 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">02</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Temples & Traditions</h3>
+                        <p class="day-summary">Fushimi Inari • Tea ceremony • Gion district</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">06:00</div>
+                            <div class="activity-content">
+                                <h4>Fushimi Inari Taisha</h4>
+                                <p>Sunrise hike melalui ribuan torii gate merah sebelum turis datang.</p>
+                                <img class="activity-img" src="https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=600" alt="Fushimi Inari">
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">10:00</div>
+                            <div class="activity-content">
+                                <h4>Private Tea Ceremony</h4>
+                                <p>Belajar filosofi <em>chado</em> dari tea master bersertifikat di teahouse bersejarah.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">18:00</div>
+                            <div class="activity-content">
+                                <h4>Gion Evening Stroll</h4>
+                                <p>Jalan-jalan di district geisha dengan guide lokal yang menceritakan sejarah.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 3 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">03</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Bamboo & Zen</h3>
+                        <p class="day-summary">Arashiyama • Tenryu-ji • Cooking class</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">08:00</div>
+                            <div class="activity-content">
+                                <h4>Arashiyama Bamboo Grove</h4>
+                                <p>Early morning walk di hutan bambu yang ikonik.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">14:00</div>
+                            <div class="activity-content">
+                                <h4>Sushi Making Class</h4>
+                                <p>Belajar dari chef dengan 30 tahun pengalaman. Bawa pulang sertifikat dan resep.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 4 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">04</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Osaka Food Adventure</h3>
+                        <p class="day-summary">Dotonbori • Street food • Night exploration</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">09:00</div>
+                            <div class="activity-content">
+                                <h4>Travel to Osaka</h4>
+                                <p>Shinkansen 15 menit ke Osaka. Check-in di hotel boutique.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">17:00</div>
+                            <div class="activity-content">
+                                <h4>Dotonbori Food Tour</h4>
+                                <p>Guided tour mencicipi takoyaki, okonomiyaki, dan kushikatsu otentik.</p>
+                                <img class="activity-img" src="https://images.unsplash.com/photo-1590559899731-a382839e5549?w=600" alt="Osaka food">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 5 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">05</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Tokyo Calling</h3>
+                        <p class="summary">Shinkansen • Shibuya • Hidden bars</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">09:00</div>
+                            <div class="activity-content">
+                                <h4>Bullet Train to Tokyo</h4>
+                                <p>Naik Shinkansen Nozomi, kecepatan 300km/jam. Bento box premium disediakan.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">20:00</div>
+                            <div class="activity-content">
+                                <h4>Hidden Bar Hopping</h4>
+                                <p>Explore Golden Gai — 200 tiny bars di alleyways Shinjuku.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 6 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">06</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Modern & Traditional</h3>
+                        <p class="day-summary">TeamLab • Tsukiji • Farewell dinner</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">09:00</div>
+                            <div class="activity-content">
+                                <h4>TeamLab Borderless</h4>
+                                <p>Museum digital immersive yang mengubah persepsi tentang seni.</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">19:00</div>
+                            <div class="activity-content">
+                                <h4>Farewell Dinner</h4>
+                                <p>Celebration dinner di rooftop restaurant dengan view Tokyo Tower.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DAY 7 -->
+            <div class="day-item" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <div class="day-number">07</div>
+                    <div class="day-info">
+                        <h3 class="day-title">Departure</h3>
+                        <p class="day-summary">Airport transfer • Until next time</p>
+                    </div>
+                    <div class="day-toggle">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="day-content">
+                    <div class="day-inner">
+                        <div class="activity">
+                            <div class="activity-time">Flexible</div>
+                            <div class="activity-content">
+                                <h4>Narita/Haneda Airport</h4>
+                                <p>Private transfer ke airport. Souvenir bag dan sampai jumpa di perjalanan berikutnya.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- MAP SECTION -->
+    <section class="section" id="map">
+        <div class="section-header">
+            <p class="section-caption caption">The Route</p>
+            <h2 class="headline">From Ancient to Modern</h2>
+        </div>
+        
+        <div class="map-container">
+            <iframe 
+                class="map-frame" 
+                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d530060.4429744298!2d135.4!3d34.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x6001a8d6cd3cc3f1%3A0xc0961d5bbb2510!2sKyoto!3m2!1d35.0116363!2d135.7680294!4m5!1s0x60188b857628235d%3A0xcdd8aef709a2b520!2sTokyo!3m2!1d35.6761919!2d139.6503106!5e0!3m2!1sen!2sjp!4v1609459200000!5m2!1sen!2sjp" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+            
+            <div class="map-locations">
+                <div class="location-item">
+                    <div class="location-dot"></div>
+                    <span class="location-name">Kyoto — 3 nights</span>
+                    <span class="location-day">Days 1-3</span>
+                </div>
+                <div class="location-item">
+                    <div class="location-dot visited"></div>
+                    <span class="location-name">Osaka — 1 night</span>
+                    <span class="location-day">Day 4</span>
+                </div>
+                <div class="location-item">
+                    <div class="location-dot visited"></div>
+                    <span class="location-name">Tokyo — 2 nights</span>
+                    <span class="location-day">Days 5-6</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- INCLUSIONS -->
+    <section class="section" id="includes">
+        <div class="section-header">
+            <p class="section-caption caption">Details</p>
+            <h2 class="headline">What's Included</h2>
+        </div>
+        
+        <div class="inclusion-grid">
+            <div class="inclusion-item">
+                <div class="inclusion-icon">🏨</div>
+                <div class="inclusion-text">
+                    <h4>Curated Stays</h4>
+                    <p>Luxury ryokan, boutique hotel, dan city hotel bintang 4+</p>
+                </div>
+            </div>
+            <div class="inclusion-item">
+                <div class="inclusion-icon">🚄</div>
+                <div class="inclusion-text">
+                    <h4>All Transport</h4>
+                    <p>Shinkansen, private cars, subway passes, airport transfers</p>
+                </div>
+            </div>
+            <div class="inclusion-item">
+                <div class="inclusion-icon">🍜</div>
+                <div class="inclusion-text">
+                    <h4>Meals</h4>
+                    <p>Daily breakfast, 4 dinners termasuk kaiseki dan food tour</p>
+                </div>
+            </div>
+            <div class="inclusion-item">
+                <div class="inclusion-icon">👨‍💼</div>
+                <div class="inclusion-text">
+                    <h4>Expert Guide</h4>
+                    <p>Local guide berbahasa Inggris/Indonesia sepanjang tour</p>
+                </div>
+            </div>
+            <div class="inclusion-item">
+                <div class="inclusion-icon">🎫</div>
+                <div class="inclusion-text">
+                    <h4>Activities</h4>
+                    <p>Tea ceremony, cooking class, TeamLab, all entrance fees</p>
+                </div>
+            </div>
+            <div class="inclusion-item">
+                <div class="inclusion-icon">📱</div>
+                <div class="inclusion-text">
+                    <h4>Connectivity</h4>
+                    <p>Pocket WiFi unlimited dan itinerary app</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- AGENT -->
+    <section class="agent-section">
+        <div class="agent-card">
+            <div class="agent-avatar">🎋</div>
+            <div class="agent-details">
+                <h3>Curated by Tanaka Tours</h3>
+                <p>Specialist in authentic Japanese experiences since 2015</p>
+                <div class="agent-contact">
+                    <a href="#">+81 90-1234-5678</a>
+                    <a href="#">hello@tanakatours.jp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="page-spacer"></div>
+    
+    <!-- STICKY PRICE -->
+    <div class="price-sticky">
+        <div class="price-info">
+            <span class="price-label">per person</span>
+            <div class="price-value">¥485,000 <span>/ $3,250</span></div>
+        </div>
+        <button class="book-btn">Reserve Spot</button>
+    </div>
+    
+    <script>
+        // GALLERY IMAGES
+        const galleryImages = [
+            'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200',
+            'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200',
+            'https://images.unsplash.com/photo-1578469550956-0e16b69c6a3d?w=1200'
+        ];
+        
+        // LIGHTBOX
+        function openLightbox(index) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            img.src = galleryImages[index];
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // COLLAPSIBLE DAYS
+        function toggleDay(element) {
+            const isActive = element.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.day-item').forEach(day => {
+                day.classList.remove('active');
+            });
+            
+            // Open clicked if wasn't active
+            if (!isActive) {
+                element.classList.add('active');
+            }
+        }
+        
+        // OPEN FIRST DAY BY DEFAULT
+        document.querySelector('.day-item').classList.add('active');
+        
+        // SMOOTH SCROLL FOR NAV
+        document.querySelectorAll('.nav-pill').forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(pill.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                }
+            });
+        });
+        
+        // UPDATE NAV ON SCROLL
+        const sections = document.querySelectorAll('.section, .gallery');
+        const navPills = document.querySelectorAll('.nav-pill');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navPills.forEach(pill => {
+                pill.classList.remove('active');
+                if (pill.getAttribute('href') === '#' + current) {
+                    pill.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

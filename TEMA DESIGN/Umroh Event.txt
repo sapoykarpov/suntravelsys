@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umroh Plus Turki - 9D8N</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #faf8f5;
+            color: #2c3e50;
+        }
+        
+        /* HERO */
+        .hero {
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%),
+                        url('https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800') center/cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 24px;
+            position: relative;
+        }
+        
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            color: #d4af37;
+            margin-bottom: 24px;
+        }
+        
+        .hero-title {
+            font-family: 'Amiri', serif;
+            font-size: 48px;
+            color: #fff;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 32px;
+        }
+        
+        .hero-badge {
+            background: rgba(212, 175, 55, 0.2);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* CONTENT */
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+        
+        /* SECTION HEADER */
+        .section-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+        }
+        
+        .section-title {
+            font-family: 'Amiri', serif;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .section-subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        /* HIGHLIGHT CARDS */
+        .highlight-container {
+            display: grid;
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .highlight-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            border-right: 4px solid #d4af37;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .highlight-card h3 {
+            font-family: 'Amiri', serif;
+            font-size: 20px;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-card p {
+            font-size: 14px;
+            color: #5d6d7e;
+            line-height: 1.6;
+        }
+        
+        /* DAY TIMELINE */
+        .timeline {
+            position: relative;
+            padding-right: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            right: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #d4af37 0%, #f4e5c2 100%);
+        }
+        
+        .day-item {
+            position: relative;
+            margin-bottom: 40px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .day-item::before {
+            content: '';
+            position: absolute;
+            right: -37px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            background: #d4af37;
+            border-radius: 50%;
+            border: 4px solid #faf8f5;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .day-number {
+            font-family: 'Amiri', serif;
+            font-size: 32px;
+            color: #d4af37;
+            font-weight: 700;
+        }
+        
+        .day-location {
+            background: #d4af37;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .day-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2c3e50;
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #5d6d7e;
+        }
+        
+        .activity-icon {
+            color: #d4af37;
+            font-weight: 700;
+        }
+        
+        /* HOTEL CARD */
+        .hotel-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 32px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .hotel-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .hotel-info {
+            padding: 24px;
+        }
+        
+        .hotel-badge {
+            display: inline-block;
+            background: #d4af37;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .hotel-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .hotel-distance {
+            color: #27ae60;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .hotel-desc {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* PRICE SECTION */
+        .price-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            color: #fff;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .price-container::before {
+            content: '☪️';
+            position: absolute;
+            font-size: 150px;
+            opacity: 0.05;
+            top: -30px;
+            left: -30px;
+        }
+        
+        .price-label {
+            font-size: 14px;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+        
+        .price-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 16px;
+        }
+        
+        .price-note {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+        
+        .cta-button {
+            background: #d4af37;
+            color: #1a1a2e;
+            border: none;
+            padding: 18px 48px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 24px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        /* AMENITIES */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .amenity-item {
+            background: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            border: 1px solid #ecf0f1;
+        }
+        
+        .amenity-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        /* AGENT SECTION */
+        .agent-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .agent-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .agent-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .agent-title {
+            color: #d4af37;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .agent-contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #5d6d7e;
+        }
+        
+        /* FLOATING CTA */
+        .float-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 20px 24px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .float-info {
+            text-align: left;
+        }
+        
+        .float-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4af37;
+        }
+        
+        .float-button {
+            background: #d4af37;
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <h1 class="hero-title">Umroh Plus<br>Istanbul</h1>
+        <p class="hero-subtitle">9 Hari Perjalanan Spiritual & Sejarah</p>
+        <div class="hero-badge">✈️ Berangkat: 15 Ramadan 2025</div>
+    </section>
+    
+    <!-- CONTENT -->
+    <div class="content">
+        <!-- HIGHLIGHTS -->
+        <div class="section-header">
+            <div class="section-icon">🕋</div>
+            <h2 class="section-title">Keistimewaan Program</h2>
+            <p class="section-subtitle">Fasilitas terbaik untuk ibadah nyaman</p>
+        </div>
+        
+        <div class="highlight-container">
+            <div class="highlight-card">
+                <h3>🚶 200m dari Masjidil Haram</h3>
+                <p>Hotel bintang 5 dengan jarak walking distance ke Ka'bah. View Ka'bah dari kamar tertentu.</p>
+            </div>
+            <div class="highlight-card">
+                <h3>👨‍💼 Ustadz Berpengalaman</h3>
+                <p>Pembimbing ibadah dengan pengalaman 10+ tahun dan khidmat menjamaah.</p>
+            </div>
+            <div class="highlight-card">
+                <h3>🍽️ Katering Premium</h3>
+                <p>Menu Indonesia, Arab, dan Turki. Snack dan air zamzam tersedia setiap hari.</p>
+            </div>
+            <div class="highlight-card">
+                <h3>📸 Dokumentasi Ibadah</h3>
+                <p>Tim foto profesional untuk dokumentasi umroh Anda (tidak mengganggu konsentrasi).</p>
+            </div>
+        </div>
+        
+        <!-- TIMELINE -->
+        <div class="section-header">
+            <div class="section-icon">📅</div>
+            <h2 class="section-title">Rencana Perjalanan</h2>
+        </div>
+        
+        <div class="timeline">
+            <!-- DAY 1 -->
+            <div class="day-item">
+                <div class="day-header">
+                    <div class="day-number">١</div>
+                    <div class="day-location">JEDDAH ✈️</div>
+                </div>
+                <h3 class="day-title">Keberangkatan & Umroh Pertama</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <span class="activity-icon">✈️</span>
+                        <span>Flight CGK-JED via Turkish Airlines</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🚌</span>
+                        <span>Transfer ke Mekkah (2 jam)</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🕋</span>
+                        <span>Umroh pertama & Thawaf</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🏨</span>
+                        <span>Check-in Hotel Fairmont Makkah</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- DAY 2-3 -->
+            <div class="day-item">
+                <div class="day-header">
+                    <div class="day-number">٢-٣</div>
+                    <div class="day-location">MAKKAH 🕋</div>
+                </div>
+                <h3 class="day-title">Ibadah & Ziarah Makkah</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <span class="activity-icon">🤲</span>
+                        <span>Sholat berjamaah di Masjidil Haram</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🏔️</span>
+                        <span>Ziarah: Jabal Nur, Jabal Tsur, Mina</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">📖</span>
+                        <span>Tadarus & Tafsir di hotel</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- DAY 4 -->
+            <div class="day-item">
+                <div class="day-header">
+                    <div class="day-number">٤</div>
+                    <div class="day-location">MADINAH 🌙</div>
+                </div>
+                <h3 class="day-title">Perjalanan ke Kota Madinah</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <span class="activity-icon">🚌</span>
+                        <span>Travel ke Madinah (5 jam)</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🕌</span>
+                        <span>Sholat di Raudhah</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🏨</span>
+                        <span>Check-in: Anwar Al Madinah Mövenpick</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- DAY 5-6 -->
+            <div class="day-item">
+                <div class="day-header">
+                    <div class="day-number">٥-٦</div>
+                    <div class="day-location">MADINAH 🌙</div>
+                </div>
+                <h3 class="day-title">Ibadah & Ziarah Madinah</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <span class="activity-icon">🤲</span>
+                        <span>Sholat 5 waktu di Masjid Nabawi</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">⚔️</span>
+                        <span>Ziarah: Uhud, Quba, Masjid Qiblatayn</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- DAY 7-9 -->
+            <div class="day-item">
+                <div class="day-header">
+                    <div class="day-number">٧-٩</div>
+                    <div class="day-location">ISTANBUL 🏛️</div>
+                </div>
+                <h3 class="day-title">Turki: Sejarah Islam & Wisata</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <span class="activity-icon">✈️</span>
+                        <span>Flight ke Istanbul</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🏰</span>
+                        <span>Hagia Sophia, Blue Mosque, Topkapi</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">🛍️</span>
+                        <span>Grand Bazaar & Spice Market</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-icon">✈️</span>
+                        <span>Return flight ke Jakarta</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- HOTELS -->
+        <div class="section-header">
+            <div class="section-icon">🏨</div>
+            <h2 class="section-title">Akomodasi</h2>
+        </div>
+        
+        <div class="hotel-card">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600" class="hotel-image" alt="Fairmont">
+            <div class="hotel-info">
+                <span class="hotel-badge">MAKKAH - 3 MALAM</span>
+                <h3 class="hotel-name">Fairmont Makkah Clock Royal Tower</h3>
+                <div class="hotel-distance">📍 200m dari Masjidil Haram</div>
+                <p class="hotel-desc">Hotel ikonik dengan clock tower, view Ka'bah, dan akses langsung ke mall.</p>
+            </div>
+        </div>
+        
+        <div class="hotel-card">
+            <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600" class="hotel-image" alt="Movenpick">
+            <div class="hotel-info">
+                <span class="hotel-badge">MADINAH - 2 MALAM</span>
+                <h3 class="hotel-name">Anwar Al Madinah Mövenpick</h3>
+                <div class="hotel-distance">📍 150m dari Masjid Nabawi</div>
+                <p class="hotel-desc">Terletak di plaza utama, akses mudah ke Raudhah dan area sholat.</p>
+            </div>
+        </div>
+        
+        <!-- PRICE -->
+        <div class="price-container">
+            <div class="price-label">Investasi Perjalanan</div>
+            <div class="price-value">Rp 65.000.000</div>
+            <div class="price-note">Quad Room (4 orang)</div>
+            <div class="price-note">Triple: +5jt | Double: +12jt</div>
+            <button class="cta-button">DAFTAR SEKARANG</button>
+        </div>
+        
+        <!-- AMENITIES -->
+        <h3 style="text-align: center; margin-bottom: 20px; font-size: 18px;">Termasuk Dalam Paket</h3>
+        <div class="amenities-grid">
+            <div class="amenity-item">
+                <span class="amenity-icon">✈️</span>
+                Tiket Pesawat PP
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">🏨</span>
+                Hotel 5 Bintang
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">🍽️</span>
+                Full Board Meals
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">🚌</span>
+                Transportasi AC
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">👨‍💼</span>
+                Tour Leader
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">📋</span>
+                Visa & Asuransi
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">🎒</span>
+                Perlengkapan Umroh
+            </div>
+            <div class="amenity-item">
+                <span class="amenity-icon">💧</span>
+                Air Zamzam 5L
+            </div>
+        </div>
+        
+        <!-- AGENT -->
+        <div class="agent-card">
+            <div class="agent-logo">☪️</div>
+            <h3 class="agent-name">Amanah Tour</h3>
+            <p class="agent-title">Mitra Spiritual Anda</p>
+            <div class="agent-contact">📱 +62 811-2233-4455</div>
+            <div class="agent-contact">✉️ umroh@amanah.tour</div>
+            <div class="agent-contact">📍 Jakarta, Indonesia</div>
+            <p style="margin-top: 24px; font-size: 12px; color: #95a5a6;">
+                Izin Kemenag: 123/2024<br>
+                Dibuat dengan Travel Asset Engine
+            </p>
+        </div>
+    </div>
+    
+    <!-- FLOATING CTA -->
+    <div class="float-bar">
+        <div class="float-info">
+            <div style="font-size: 12px; color: #7f8c8d;">Start from</div>
+            <div class="float-price">Rp 65jt</div>
+        </div>
+        <button class="float-button">Hubungi Kami</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import { 
+  Heart, 
+  Share2, 
+  MessageCircle, 
+  MapPin, 
+  Camera, 
+  Coffee, 
+  Users, 
+  Zap,
+  ArrowRight,
+  Compass
+} from 'lucide-react';
+
+const App = () => {
+  const [liked, setLiked] = useState(false);
+
+  const itinerary = [
+    { day: "01", title: "Arrival & Chill", desc: "Landing di Madinah, check-in di hotel butik, dan santai sore di sekitar Masjid Nabawi.", icon: <Zap size={18} /> },
+    { day: "03", title: "Spiritual Circle", desc: "Sharing session santai bareng pembimbing muda tentang makna hijrah.", icon: <Users size={18} /> },
+    { day: "06", title: "Makkah Vibe", desc: "Prosesi Umrah utama dengan bimbingan yang praktis dan bermakna.", icon: <Compass size={18} /> }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900 font-sans pb-32">
+      {/* Navigation Top */}
+      <nav className="p-6 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="text-xl font-black tracking-tighter">UMRAH<span className="text-blue-600">MODERN.</span></div>
+        <div className="bg-slate-100 p-2 rounded-full">
+          <Zap size={18} className="text-blue-600" />
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="px-6 pt-4">
+        <div className="relative rounded-[2.5rem] overflow-hidden aspect-[3/4] shadow-2xl group">
+          <img 
+            src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=800" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            alt="Modern Umrah"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+          <div className="absolute bottom-10 left-8 right-8">
+            <h1 className="text-4xl font-black text-white leading-none mb-4 tracking-tighter">
+              IBADAH JADI <br/>LEBIH BERMAKNA.
+            </h1>
+            <p className="text-white/70 text-sm font-medium max-w-[250px]">
+              Edisi terbatas untuk kamu yang mencari ketenangan di tengah hiruk pikuk dunia.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="px-6 mt-12 grid grid-cols-2 gap-4">
+        <div className="bg-blue-50 p-6 rounded-[2rem] flex flex-col gap-4">
+          <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
+            <Camera size={20} />
+          </div>
+          <span className="text-xs font-bold leading-tight">Professional <br/>Documentation</span>
+        </div>
+        <div className="bg-slate-50 p-6 rounded-[2rem] flex flex-col gap-4">
+          <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-slate-600 shadow-sm">
+            <Coffee size={20} />
+          </div>
+          <span className="text-xs font-bold leading-tight">Millennial <br/>Community</span>
+        </div>
+      </section>
+
+      {/* Itinerary Section */}
+      <section className="px-6 mt-16">
+        <h3 className="text-2xl font-black tracking-tighter mb-8 italic">THE JOURNEY</h3>
+        <div className="space-y-6">
+          {itinerary.map((item, i) => (
+            <div key={i} className="flex gap-6 items-start group">
+              <div className="text-blue-600 font-black text-2xl opacity-20 group-hover:opacity-100 transition-opacity italic">
+                {item.day}
+              </div>
+              <div className="flex-1 pb-6 border-b border-slate-100">
+                <h4 className="font-bold text-lg mb-1 flex items-center gap-2">
+                  {item.title} {item.icon}
+                </h4>
+                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing Card */}
+      <section className="px-6 mt-12">
+        <div className="bg-blue-600 rounded-[2.5rem] p-10 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Zap size={120} />
+          </div>
+          <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-70 mb-2">Investment</p>
+          <div className="text-4xl font-black tracking-tighter mb-8 italic">IDR 32.500K</div>
+          <button className="w-full bg-white text-blue-600 py-4 rounded-2xl font-black text-sm tracking-widest uppercase shadow-xl hover:bg-blue-50 transition-colors">
+            GET THE SPOT
+          </button>
+        </div>
+      </section>
+
+      {/* BOTTOM NAVBAR */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 z-[100]">
+        <div className="max-w-md mx-auto bg-slate-900/90 backdrop-blur-xl rounded-[2rem] p-2 flex items-center justify-between shadow-2xl border border-white/10">
+          <div className="flex gap-1">
+            <button 
+              onClick={() => setLiked(!liked)}
+              className={`p-4 rounded-2xl transition-all ${liked ? 'bg-red-500 text-white' : 'text-white/40 hover:text-white'}`}
+            >
+              <Heart size={22} fill={liked ? "currentColor" : "none"} />
+            </button>
+            <button className="p-4 text-white/40 hover:text-white">
+              <Share2 size={22} />
+            </button>
+          </div>
+          
+          <button className="flex-1 mx-4 bg-blue-600 text-white h-14 rounded-2xl font-black text-xs tracking-[0.2em] uppercase shadow-lg shadow-blue-500/30">
+            BOOK NOW
+          </button>
+
+          <a 
+            href="https://wa.me/yournumber" 
+            className="p-4 bg-emerald-500 text-white rounded-2xl shadow-lg shadow-emerald-500/20"
+          >
+            <MessageCircle size={22} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;

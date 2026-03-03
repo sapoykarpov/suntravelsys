@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maldives Private Island - Ultra Luxury</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E8C1;
+            --dark: #0a0a0a;
+            --dark-lighter: #1a1a1a;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* SMOOTH SCROLL */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* VIDEO HERO */
+        .video-hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,0.2) 0%,
+                rgba(0,0,0,0.4) 50%,
+                rgba(0,0,0,0.9) 100%
+            );
+            z-index: -1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 24px;
+            max-width: 800px;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            border: 1px solid var(--gold);
+            padding: 12px 24px;
+            margin-bottom: 40px;
+            animation: fadeInDown 1.2s ease-out;
+        }
+        
+        .hero-badge span {
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(48px, 10vw, 80px);
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 1.4s ease-out 0.3s forwards;
+        }
+        
+        .hero-title span {
+            display: block;
+            font-style: italic;
+            color: var(--gold);
+        }
+        
+        .hero-subtitle {
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 1.4s ease-out 0.6s forwards;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-indicator span {
+            display: block;
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+            margin: 0 auto 10px;
+        }
+        
+        .scroll-indicator p {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+        
+        /* FLOATING NAV */
+        .floating-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        .floating-nav.visible {
+            opacity: 1;
+            transform: translateY(0);
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(20px);
+        }
+        
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: var(--gold);
+        }
+        
+        .nav-cta {
+            background: var(--gold);
+            color: var(--dark);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* PARALLAX SECTIONS */
+        .parallax-section {
+            position: relative;
+            padding: 120px 24px;
+            overflow: hidden;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: -20%;
+            left: 0;
+            width: 100%;
+            height: 140%;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+        }
+        
+        .parallax-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10,10,10,0.85);
+        }
+        
+        .parallax-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* REVEAL ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: block;
+        }
+        
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(32px, 6vw, 48px);
+            font-weight: 300;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+        
+        .section-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.7);
+            font-weight: 300;
+        }
+        
+        /* EXPERIENCE CARDS */
+        .experience-grid {
+            display: grid;
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        .exp-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .exp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .exp-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .exp-card:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-5px);
+        }
+        
+        .exp-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 64px;
+            color: rgba(212, 175, 55, 0.2);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-weight: 300;
+        }
+        
+        .exp-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .exp-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .exp-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+        
+        /* DAY TIMELINE LUXURY */
+        .timeline-container {
+            position: relative;
+            padding: 60px 0;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, var(--gold) 0%, rgba(212,175,55,0.1) 100%);
+        }
+        
+        .day-luxury {
+            position: relative;
+            padding-left: 80px;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s ease;
+        }
+        
+        .day-luxury.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .day-dot {
+            position: absolute;
+            left: 21px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 4px solid var(--dark);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .day-header-lux {
+            margin-bottom: 20px;
+        }
+        
+        .day-label {
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .day-title-lux {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+        }
+        
+        .day-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            transition: transform 0.5s ease;
+        }
+        
+        .day-luxury:hover .day-image {
+            transform: scale(1.02);
+        }
+        
+        .activity-luxury {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border-left: 2px solid var(--gold);
+        }
+        
+        .activity-time-lux {
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .activity-title-lux {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        
+        .activity-desc-lux {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+        
+        /* VIDEO SECTION */
+        .video-section {
+            padding: 100px 24px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+        
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .video-play-btn:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: var(--gold);
+        }
+        
+        .video-play-btn::after {
+            content: '▶';
+            color: var(--dark);
+            font-size: 24px;
+            margin-left: 4px;
+        }
+        
+        /* VILLA SHOWCASE */
+        .villa-showcase {
+            padding: 100px 24px;
+            background: var(--dark-lighter);
+        }
+        
+        .villa-slider {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 20px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .villa-slide {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .villa-slide img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .villa-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 24px 24px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        }
+        
+        .villa-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .villa-price {
+            color: var(--gold);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* PRICE SECTION LUXURY */
+        .price-luxury {
+            padding: 120px 24px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .price-luxury::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .price-label-lux {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 16px;
+        }
+        
+        .price-value-lux {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(48px, 10vw, 72px);
+            color: var(--gold);
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+        
+        .price-note-lux {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 40px;
+        }
+        
+        .cta-luxury {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 20px 48px;
+            border-radius: 40px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-luxury::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .cta-luxury:hover {
+            color: var(--dark);
+        }
+        
+        .cta-luxury:hover::before {
+            left: 0;
+        }
+        
+        /* AGENT FOOTER LUXURY */
+        .agent-luxury {
+            padding: 80px 24px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .agent-seal {
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .agent-seal::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+        }
+        
+        .agent-initial {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            color: var(--gold);
+        }
+        
+        .agent-name-lux {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .agent-title-lux {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+        
+        .agent-contact-lux {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 12px;
+        }
+        
+        /* FLOATING BOOKING BAR */
+        .booking-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.98);
+            backdrop-filter: blur(20px);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .booking-bar.visible {
+            transform: translateY(0);
+        }
+        
+        .booking-info h4 {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        
+        .booking-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            color: var(--gold);
+        }
+        
+        .booking-btn {
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+        
+        /* LOADING SCREEN */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: var(--gold);
+            letter-spacing: 4px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* CURSOR EFFECT */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        @media (hover: hover) {
+            .cursor-glow {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADER -->
+    <div class="loader" id="loader">
+        <div class="loader-text">LUXURY TRAVEL</div>
+    </div>
+    
+    <!-- CURSOR GLOW -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+    
+    <!-- FLOATING NAV -->
+    <nav class="floating-nav" id="floatingNav">
+        <div class="nav-logo">◆ LUXE</div>
+        <button class="nav-cta">Book Now</button>
+    </nav>
+    
+    <!-- VIDEO HERO -->
+    <section class="video-hero">
+        <video class="video-bg" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1200">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-beach-with-waves-1089-large.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>Private Island Experience</span>
+            </div>
+            <h1 class="hero-title">
+                Maldives
+                <span>Beyond Dreams</span>
+            </h1>
+            <p class="hero-subtitle">
+                6 DAYS • 5 NIGHTS • EXCLUSIVE PRIVATE VILLA
+            </p>
+        </div>
+        
+        <div class="scroll-indicator">
+            <span></span>
+            <p>Scroll</p>
+        </div>
+    </section>
+    
+    <!-- INTRO PARALLAX -->
+    <section class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200');" id="parallax1"></div>
+        <div class="parallax-overlay"></div>
+        
+        <div class="parallax-content">
+            <span class="section-label reveal">The Experience</span>
+            <h2 class="section-title reveal">Where Time Stands Still</h2>
+            <p class="section-text reveal">
+                Terbangun dengan suara ombak yang menepuk kamar Anda. 
+                Infinity pool pribadi yang menghadap samudra tak terbatas. 
+                Ini bukan sekadar liburan—ini adalah transformasi.
+            </p>
+        </div>
+    </section>
+    
+    <!-- EXPERIENCES -->
+    <section style="padding: 100px 24px; background: var(--dark);">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <span class="section-label reveal">Curated For You</span>
+            <h2 class="section-title reveal">Unforgettable Moments</h2>
+            
+            <div class="experience-grid">
+                <div class="exp-card reveal">
+                    <span class="exp-number">01</span>
+                    <div class="exp-icon">🚁</div>
+                    <h3 class="exp-title">Seaplane Arrival</h3>
+                    <p class="exp-desc">
+                        Penjemputan eksklusif dengan seaplane pribadi. 
+                        View atoll dari ketinggian 10,000 kaki yang tak terlupakan.
+                    </p>
+                </div>
+                
+                <div class="exp-card reveal">
+                    <span class="exp-number">02</span>
+                    <div class="exp-icon">🍾</div>
+                    <h3 class="exp-title">Champagne Sunset</h3>
+                    <p class="exp-desc">
+                        Private sandbank dinner dengan champagne vintage 
+                        dan chef pribadi yang menyiapkan hidangan segar.
+                    </p>
+                </div>
+                
+                <div class="exp-card reveal">
+                    <span class="exp-number">03</span>
+                    <div class="exp-icon">🐠</div>
+                    <h3 class="exp-title">Underwater Dining</h3>
+                    <p class="exp-desc">
+                        Makan malam di restoran bawah laut dengan view 
+                        karang dan bioluminescence yang memukau.
+                    </p>
+                </div>
+                
+                <div class="exp-card reveal">
+                    <span class="exp-number">04</span>
+                    <div class="exp-icon">🧘</div>
+                    <h3 class="exp-title">Sunrise Yoga</h3>
+                    <p class="exp-desc">
+                        Sesi yoga privat di overwater pavilion 
+                        dengan instruktur internasional bersertifikat.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- DAY BY DAY -->
+    <section style="padding: 100px 24px; background: var(--dark-lighter);">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <span class="section-label reveal">Your Journey</span>
+            <h2 class="section-title reveal">Day by Day</h2>
+            
+            <div class="timeline-container" id="timeline">
+                <div class="timeline-line"></div>
+                
+                <!-- DAY 1 -->
+                <div class="day-luxury">
+                    <div class="day-dot"></div>
+                    <div class="day-header-lux">
+                        <div class="day-label">Day One</div>
+                        <h3 class="day-title-lux">Arrival in Paradise</h3>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1540206395-688085723adb?w=600" class="day-image" alt="Seaplane">
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">14:00</div>
+                        <div class="activity-title-lux">Velana International Airport</div>
+                        <div class="activity-desc-lux">
+                            Meet & greet di lounge eksklusif, lalu boarding seaplane pribadi.
+                        </div>
+                    </div>
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">15:30</div>
+                        <div class="activity-title-lux">Check-in Overwater Villa</div>
+                        <div class="activity-desc-lux">
+                            Villa 200sqm dengan infinity pool, glass floor, dan butler 24 jam.
+                        </div>
+                    </div>
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">19:00</div>
+                        <div class="activity-title-lux">Welcome Dinner</div>
+                        <div class="activity-desc-lux">
+                            Private dining di dek villa dengan menu degustasi 7 course.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DAY 2 -->
+                <div class="day-luxury">
+                    <div class="day-dot"></div>
+                    <div class="day-header-lux">
+                        <div class="day-label">Day Two</div>
+                        <h3 class="day-title-lux">Ocean Exploration</h3>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600" class="day-image" alt="Diving">
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">09:00</div>
+                        <div class="activity-title-lux">Private Snorkeling</div>
+                        <div class="activity-desc-lux">
+                            Explore house reef dengan marine biologist pribadi.
+                        </div>
+                    </div>
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">14:00</div>
+                        <div class="activity-title-lux">Spa Treatment</div>
+                        <div class="activity-desc-lux">
+                            Maldivian healing ritual 180 menit di overwater spa.
+                        </div>
+                    </div>
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">18:00</div>
+                        <div class="activity-title-lux">Sandbank Champagne</div>
+                        <div class="activity-desc-lux">
+                            Private sandbank dengan sunset view dan champagne Dom Pérignon.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DAY 3 -->
+                <div class="day-luxury">
+                    <div class="day-dot"></div>
+                    <div class="day-header-lux">
+                        <div class="day-label">Day Three</div>
+                        <h3 class="day-title-lux">Underwater Wonders</h3>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1582967788606-a171f1080ca8?w=600" class="day-image" alt="Underwater restaurant">
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">10:00</div>
+                        <div class="activity-title-lux">Submarine Tour</div>
+                        <div class="activity-desc-lux">
+                            Dive 100ft dalam submarine pribadi melihat shark dan turtle.
+                        </div>
+                    </div>
+                    <div class="activity-luxury">
+                        <div class="activity-time-lux">19:00</div>
+                        <div class="activity-title-lux">Ithaa Undersea Restaurant</div>
+                        <div class="activity-desc-lux">
+                            Dinner di restoran bawah laut pertama di dunia. European cuisine.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- VIDEO SECTION -->
+    <section class="video-section">
+        <span class="section-label reveal">Visual Journey</span>
+        <h2 class="section-title reveal">Experience the Magic</h2>
+        
+        <div class="video-wrapper reveal">
+            <video id="experienceVideo" poster="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-beach-with-waves-1089-large.mp4" type="video/mp4">
+            </video>
+            <button class="video-play-btn" id="playBtn"></button>
+        </div>
+        
+        <p class="section-text reveal" style="max-width: 600px; margin: 0 auto;">
+            Setiap momen diabadikan oleh tim videographer kami. 
+            Anda akan memb pulang tidak hanya kenangan, tetapi juga film dokumenter pribadi.
+        </p>
+    </section>
+    
+    <!-- VILLA SHOWCASE -->
+    <section class="villa-showcase">
+        <div style="max-width: 600px; margin: 0 auto 40px;">
+            <span class="section-label reveal">Accommodation</span>
+            <h2 class="section-title reveal">Your Private Sanctuary</h2>
+        </div>
+        
+        <div class="villa-slider">
+            <div class="villa-slide">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600" alt="Overwater Villa">
+                <div class="villa-info">
+                    <h3 class="villa-name">Overwater Villa</h3>
+                    <p class="villa-price">Starting from $2,500/night</p>
+                </div>
+            </div>
+            <div class="villa-slide">
+                <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600" alt="Beach Villa">
+                <div class="villa-info">
+                    <h3 class="villa-name">Beach Villa with Pool</h3>
+                    <p class="villa-price">Starting from $3,200/night</p>
+                </div>
+            </div>
+            <div class="villa-slide">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" alt="Presidential Suite">
+                <div class="villa-info">
+                    <h3 class="villa-name">Presidential Water Suite</h3>
+                    <p class="villa-price">Starting from $8,500/night</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- PRICE SECTION -->
+    <section class="price-luxury">
+        <span class="section-label reveal">Investment</span>
+        <div class="price-value-lux reveal">$18,500</div>
+        <p class="price-note-lux reveal">Per person • 6D5N • All Inclusive</p>
+        <p class="section-text reveal" style="max-width: 500px; margin: 0 auto 40px;">
+            Termasuk: Seaplane transfer, all meals, premium beverages, 
+            spa credits, water sports, dan private photography session.
+        </p>
+        <button class="cta-luxury reveal">Reserve Your Journey</button>
+    </section>
+    
+    <!-- AGENT FOOTER -->
+    <section class="agent-luxury">
+        <div class="agent-seal">
+            <span class="agent-initial">L</span>
+        </div>
+        <h3 class="agent-name-lux">Luxe Travel Curators</h3>
+        <p class="agent-title-lux">Exclusive Travel Design</p>
+        
+        <p class="agent-contact-lux">📱 +62 812-8888-9999</p>
+        <p class="agent-contact-lux">✉️ concierge@luxetravel.id</p>
+        <p class="agent-contact-lux">🌐 www.luxetravel.id</p>
+        
+        <p style="margin-top: 40px; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 2px;">
+            CRAFTED WITH TRAVEL ASSET ENGINE
+        </p>
+    </section>
+    
+    <!-- FLOATING BOOKING BAR -->
+    <div class="booking-bar" id="bookingBar">
+        <div class="booking-info">
+            <h4>MALDIVES PRIVATE ISLAND</h4>
+            <div class="booking-price">$18,500</div>
+        </div>
+        <button class="booking-btn">BOOK NOW</button>
+    </div>
+    
+    <script>
+        // LOADER
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+        
+        // CURSOR GLOW (desktop only)
+        const cursorGlow = document.getElementById('cursorGlow');
+        if (window.matchMedia('(hover: hover)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = e.clientX - 150 + 'px';
+                cursorGlow.style.top = e.clientY - 150 + 'px';
+            });
+        }
+        
+        // FLOATING NAV
+        const floatingNav = document.getElementById('floatingNav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                floatingNav.classList.add('visible');
+            } else {
+                floatingNav.classList.remove('visible');
+            }
+        });
+        
+        // REVEAL ON SCROLL
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        reveals.forEach(el => revealObserver.observe(el));
+        
+        // PARALLAX EFFECT
+        const parallaxBg = document.getElementById('parallax1');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * 0.5;
+            parallaxBg.style.transform = `translateY(${rate}px)`;
+        });
+        
+        // DAY BY DAY REVEAL
+        const dayItems = document.querySelectorAll('.day-luxury');
+        const dayObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        dayItems.forEach(el => dayObserver.observe(el));
+        
+        // VIDEO PLAY
+        const video = document.getElementById('experienceVideo');
+        const playBtn = document.getElementById('playBtn');
+        
+        playBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playBtn.style.opacity = '0';
+            } else {
+                video.pause();
+                playBtn.style.opacity = '1';
+            }
+        });
+        
+        video.addEventListener('ended', () => {
+            playBtn.style.opacity = '1';
+        });
+        
+        // BOOKING BAR
+        const bookingBar = document.getElementById('bookingBar');
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const heroHeight = window.innerHeight;
+            
+            if (currentScroll > heroHeight && currentScroll > lastScroll) {
+                bookingBar.classList.add('visible');
+            } else if (currentScroll < lastScroll || currentScroll < heroHeight) {
+                bookingBar.classList.remove('visible');
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // SMOOTH SCROLL FOR ANCHORS
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

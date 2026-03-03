@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bali Luxury Escape - 5D4N</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%),
+                        url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px 24px;
+            position: relative;
+        }
+        
+        .hero-badge {
+            position: absolute;
+            top: 40px;
+            right: 24px;
+            background: rgba(201, 169, 98, 0.9);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: #c9a962;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        
+        .hero-title {
+            font-size: 42px;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            font-family: 'Georgia', serif;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* PRICE FLOAT */
+        .price-float {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent 0%, #000 20%);
+            padding: 30px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 4px;
+        }
+        
+        .price-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #c9a962;
+        }
+        
+        .cta-button {
+            background: #c9a962;
+            color: #000;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* CONTENT SECTIONS */
+        .section {
+            padding: 60px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #c9a962;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        
+        .section-heading {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 24px;
+            font-family: 'Georgia', serif;
+        }
+        
+        /* HIGHLIGHT CARDS */
+        .highlight-grid {
+            display: grid;
+            gap: 16px;
+            margin: 40px 0;
+        }
+        
+        .highlight-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 3px solid #c9a962;
+        }
+        
+        .highlight-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .highlight-card p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+        
+        /* DAY TIMELINE */
+        .day-container {
+            margin: 40px 0;
+        }
+        
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .day-number {
+            width: 60px;
+            height: 60px;
+            background: #c9a962;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .day-info h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .day-info p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .activity-list {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .activity-list::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(201, 169, 98, 0.3);
+        }
+        
+        .activity-item {
+            position: relative;
+            margin-bottom: 32px;
+            padding-left: 24px;
+        }
+        
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            background: #c9a962;
+            border-radius: 50%;
+            border: 3px solid #0a0a0a;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: #c9a962;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .activity-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .activity-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+        
+        .activity-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        
+        /* HOTEL CARD */
+        .hotel-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 24px 0;
+        }
+        
+        .hotel-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .hotel-info {
+            padding: 24px;
+        }
+        
+        .hotel-stars {
+            color: #c9a962;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .hotel-name {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+        
+        .hotel-location {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* INCLUSION TAGS */
+        .tag-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 24px 0;
+        }
+        
+        .tag {
+            background: rgba(201, 169, 98, 0.15);
+            color: #c9a962;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid rgba(201, 169, 98, 0.3);
+        }
+        
+        /* AGENT BRAND */
+        .agent-section {
+            background: rgba(255,255,255,0.03);
+            padding: 40px 24px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .agent-logo {
+            width: 80px;
+            height: 80px;
+            background: #c9a962;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .agent-name {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .agent-contact {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* SCROLL PROGRESS */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: #c9a962;
+            z-index: 1000;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">★ Premium Experience</div>
+        <div class="hero-subtitle">Private Journey</div>
+        <h1 class="hero-title">Bali Luxury<br>Escape</h1>
+        <div class="hero-meta">
+            <span>📅 5 Days 4 Nights</span>
+            <span>✈️ Mar 15-19, 2025</span>
+            <span>👥 Max 8 Guests</span>
+        </div>
+    </section>
+    
+    <!-- HIGHLIGHTS -->
+    <section class="section">
+        <div class="section-title">Experience</div>
+        <h2 class="section-heading">What Awaits You</h2>
+        
+        <div class="highlight-grid">
+            <div class="highlight-card">
+                <h3>🏝️ Private Villa Living</h3>
+                <p>Menginap di Ayana Resort dengan private pool dan ocean view yang tak terlupakan.</p>
+            </div>
+            <div class="highlight-card">
+                <h3>🍽️ Culinary Journey</h3>
+                <p>Dinner eksklusif di Rock Bar dengan sunset view dan menu degustasi khas Bali.</p>
+            </div>
+            <div class="highlight-card">
+                <h3>🧘 Wellness Ritual</h3>
+                <p>Spa treatment tradisional dengan bahan-bahan alami di tepi tebing Jimbaran.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- DAY BY DAY -->
+    <section class="section">
+        <div class="section-title">Journey</div>
+        <h2 class="section-heading">Day by Day</h2>
+        
+        <!-- DAY 1 -->
+        <div class="day-container">
+            <div class="day-header">
+                <div class="day-number">01</div>
+                <div class="day-info">
+                    <h3>Arrival & Sunset</h3>
+                    <p>March 15, 2025</p>
+                </div>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-time">14:00</div>
+                    <div class="activity-title">VIP Airport Pickup</div>
+                    <div class="activity-desc">Penjemputan dengan private car, welcome drink, dan cold towel.</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">15:30</div>
+                    <div class="activity-title">Check-in Ayana Resort</div>
+                    <div class="activity-desc">Ocean View Villa dengan private pool dan butler service 24 jam.</div>
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600" class="activity-image" alt="Ayana Resort">
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">18:00</div>
+                    <div class="activity-title">Sunset di Rock Bar</div>
+                    <div class="activity-desc">Cocktail dan canapé sambil menikmati sunset terbaik di Bali.</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DAY 2 -->
+        <div class="day-container">
+            <div class="day-header">
+                <div class="day-number">02</div>
+                <div class="day-info">
+                    <h3>Culture & Wellness</h3>
+                    <p>March 16, 2025</p>
+                </div>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-time">06:30</div>
+                    <div class="activity-title">Sunrise Yoga</div>
+                    <div class="activity-desc">Private yoga session di tepi tebing dengan instruktur berpengalaman.</div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">09:00</div>
+                    <div class="activity-title">Ubud Art Tour</div>
+                    <div class="activity-desc">Kunjungan ke Tegalalang Rice Terrace dan Tirta Empul Temple.</div>
+                    <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600" class="activity-image" alt="Rice Terrace">
+                </div>
+                <div class="activity-item">
+                    <div class="activity-time">15:00</div>
+                    <div class="activity-title">Spa Treatment</div>
+                    <div class="activity-desc">Balinese massage 120 menit dengan essential oil lokal.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- HOTEL -->
+    <section class="section">
+        <div class="section-title">Accommodation</div>
+        <h2 class="section-heading">Your Sanctuary</h2>
+        
+        <div class="hotel-card">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" class="hotel-image" alt="Ayana">
+            <div class="hotel-info">
+                <div class="hotel-stars">★★★★★</div>
+                <h3 class="hotel-name">AYANA Resort Bali</h3>
+                <div class="hotel-location">📍 Jimbaran, Bali</div>
+                <p style="margin-top: 16px; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6;">
+                    Resort ikonik dengan 90 hektar taman tropis, 12 kolam renang, dan akses eksklusif ke Kubu Beach.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- INCLUSIONS -->
+    <section class="section">
+        <div class="section-title">Details</div>
+        <h2 class="section-heading">What's Included</h2>
+        
+        <div class="tag-grid">
+            <span class="tag">✈️ Airport Transfer</span>
+            <span class="tag">🏨 4 Nights Villa</span>
+            <span class="tag">🍽️ Daily Breakfast</span>
+            <span class="tag">🍸 Welcome Drink</span>
+            <span class="tag">🧘 Yoga Class</span>
+            <span class="tag">💆 Spa Treatment</span>
+            <span class="tag">🚗 Private Car</span>
+            <span class="tag">👨‍💼 Butler Service</span>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 24px; border-radius: 16px; margin-top: 24px;">
+            <h3 style="margin-bottom: 16px; color: #c9a962;">Not Included</h3>
+            <ul style="list-style: none; font-size: 14px; color: rgba(255,255,255,0.6); line-height: 2;">
+                <li>✗ Tiket pesawat internasional</li>
+                <li>✗ Makan malam (kecuali yang disebutkan)</li>
+                <li>✗ Pengeluaran pribadi</li>
+                <li>✗ Asuransi perjalanan</li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- AGENT BRAND -->
+    <section class="agent-section">
+        <div class="agent-logo">AT</div>
+        <h3 class="agent-name">Andi Tour</h3>
+        <p class="agent-contact">📱 +62 812-3456-7890</p>
+        <p class="agent-contact">✉️ hello@anditour.com</p>
+        <p class="agent-contact">🌐 www.anditour.com</p>
+        
+        <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 12px; color: rgba(255,255,255,0.4);">
+                Dibuat dengan Travel Asset Engine<br>
+                Kode Reseller: AT001
+            </p>
+        </div>
+    </section>
+    
+    <!-- PRICE FLOAT -->
+    <div class="price-float">
+        <div>
+            <div class="price-label">Starting from</div>
+            <div class="price-value">Rp 8.500.000</div>
+        </div>
+        <button class="cta-button">BOOK NOW</button>
+    </div>
+    
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + "%";
+        });
+        
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.day-container, .highlight-card, .hotel-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
