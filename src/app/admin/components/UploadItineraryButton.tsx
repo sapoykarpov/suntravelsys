@@ -21,9 +21,9 @@ export default function UploadItineraryButton() {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-black font-semibold rounded-lg hover:bg-[#F4E8C1] transition-colors text-sm"
+                className="flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-black font-bold rounded-xl hover:bg-[#F4E8C1] transition-all shadow-lg hover:shadow-[#D4AF37]/20 active:scale-95 text-base"
             >
-                <Upload size={16} />
+                <Upload size={20} />
                 Upload Document
             </button>
 
