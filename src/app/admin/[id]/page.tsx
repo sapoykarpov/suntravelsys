@@ -4,6 +4,7 @@ import AdminEditorWrapper from '../components/AdminEditorWrapper';
 import ContentHubNav from '../components/ContentHubNav';
 import MicroblogKit from '../components/MicroblogKit';
 import CopywritingKit from '../components/CopywritingKit';
+import FlyerKit from '../components/FlyerKit';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-type HubTab = 'dmi' | 'microblog' | 'copywriting';
+type HubTab = 'dmi' | 'microblog' | 'copywriting' | 'flyer';
 
 export default async function AdminDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
@@ -59,6 +60,11 @@ export default async function AdminDetailPage({ params, searchParams }: PageProp
       {/* Tab: Copywriting Kit */}
       {activeTab === 'copywriting' && (
         <CopywritingKit data={data} />
+      )}
+
+      {/* Tab: Flyer Maker */}
+      {activeTab === 'flyer' && (
+        <FlyerKit data={data} />
       )}
     </div>
   );
