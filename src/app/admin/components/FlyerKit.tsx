@@ -29,9 +29,10 @@ interface FlyerCanvasProps {
     editedTexts: Record<string, string>;
     editedImages: Record<string, string>;
     scale: number;
+    headlineStyle?: any;
 }
 
-function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale }: FlyerCanvasProps) {
+function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, headlineStyle }: FlyerCanvasProps) {
     const { w, h } = FLYER_DIMS[ratio];
     const primaryColor = brand.primaryColor || schema.colorPalette.primary || '#B8860B';
     const heroBg = editedImages['img-hero'] || (brand as any).heroImage;
@@ -161,12 +162,29 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale }:
 
                     const color = el.style.color || '#fff';
 
+                    // Magic Headline Logic
+                    const isMagicHeadline = el.role === 'headline' && headlineStyle;
+                    const magicCss: React.CSSProperties = isMagicHeadline ? {
+                        background: headlineStyle.color.includes('gradient') ? headlineStyle.color : undefined,
+                        WebkitBackgroundClip: headlineStyle.color.includes('gradient') ? 'text' : undefined,
+                        WebkitTextFillColor: headlineStyle.color.includes('gradient') ? 'transparent' : headlineStyle.color,
+                        WebkitTextStroke: headlineStyle.webkitTextStroke ? `${parseInt(headlineStyle.webkitTextStroke) * scale}px ${headlineStyle.webkitTextStroke.split(' ')[1]}` : undefined,
+                        textShadow: headlineStyle.textShadow ? headlineStyle.textShadow.split(',').map((s: string) => {
+                            const parts = s.trim().split(' ');
+                            return parts.map(p => p.includes('px') ? (parseFloat(p) * scale) + 'px' : p).join(' ');
+                        }).join(', ') : undefined,
+                        letterSpacing: headlineStyle.letterSpacing,
+                        textTransform: headlineStyle.textTransform as any,
+                        transform: (posStyle.transform || '') + (headlineStyle.skew ? ` skew(${headlineStyle.skew})` : ''),
+                        fontSize: (parseFloat(FONT_SIZE_MAP[el.style.fontSize]) * 1.5 * scale) + 'px', // Boost size for magic text
+                    } : {};
+
                     return (
                         <div key={el.id} style={{
                             position: 'absolute',
                             ...posStyle,
                             textAlign: el.style.align,
-                            width: el.style.align === 'center' ? '85%' : undefined,
+                            width: el.style.align === 'center' ? '90%' : undefined,
                             zIndex: isBadge ? 10 : isPrice ? 8 : isCTA ? 9 : 5,
                             pointerEvents: 'none',
                         }}>
@@ -216,11 +234,12 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale }:
                                     fontSize: parseFloat(FONT_SIZE_MAP[el.style.fontSize]) * scale + 'px',
                                     fontWeight: FONT_WEIGHT_MAP[el.style.fontWeight],
                                     color,
-                                    lineHeight: 1.2,
-                                    textShadow: el.role === 'headline' ? `0 2px 16px rgba(0,0,0,0.6)` : `0 1px 6px rgba(0,0,0,0.4)`,
+                                    lineHeight: 1.1,
+                                    textShadow: el.role === 'headline' && !headlineStyle ? `0 2px 16px rgba(0,0,0,0.6)` : !headlineStyle ? `0 1px 6px rgba(0,0,0,0.4)` : undefined,
                                     fontFamily: el.role === 'headline'
                                         ? `'${schema.typography.headingFont}', ${fontMap[schema.fontStyle]}`
                                         : fontFamily,
+                                    ...magicCss
                                 }}>
                                     {text}
                                 </span>
@@ -365,7 +384,34 @@ interface FlyerKitProps { data: ItineraryPayload; }
 export default function FlyerKit({ data }: FlyerKitProps) {
     const { brand, meta, days, inclusions, highlights } = data;
 
-    // State
+    // State for Magic Text Effect
+    const [magicHeadlineUrl, setMagicHeadlineUrl] = useState('');
+    const [scanningEffect, setScanningEffect] = useState(false);
+    const [headlineStyle, setHeadlineStyle] = useState<any>(null);
+
+    const handleScanEffect = async () => {
+        if (!magicHeadlineUrl.trim()) return;
+        setScanningEffect(true);
+        try {
+            const res = await fetch('/api/flyer/analyze-text-effect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ imageUrl: magicHeadlineUrl }),
+            });
+            const result = await res.json();
+            if (result.style) {
+                setHeadlineStyle(result.style);
+                setSidebarTab('texts');
+            }
+        } catch (e) {
+            console.error('Magic Scan failure', e);
+        } finally {
+            setScanningEffect(false);
+        }
+    };
+
+    // Replace the text-headline rendering block in FlyerCanvas helper...
+    // Note: To keep things clean, I will modify the internal FlyerCanvas logic via replacement
     const [ratio, setRatio] = useState<FlyerRatio>('4:5');
     const [schema, setSchema] = useState<DesignSchema | null>(null);
     const [analyzing, setAnalyzing] = useState(false);
@@ -583,6 +629,7 @@ export default function FlyerKit({ data }: FlyerKitProps) {
                                     editedTexts={editedTexts}
                                     editedImages={editedImages}
                                     scale={SCALE}
+                                    headlineStyle={headlineStyle}
                                 />
                             </div>
 
@@ -726,6 +773,26 @@ export default function FlyerKit({ data }: FlyerKitProps) {
                         {/* ── Texts ── */}
                         {sidebarTab === 'texts' && schema && (
                             <>
+                                {/* Magic Text Scan Section */}
+                                <div style={{ ...card, background: 'linear-gradient(135deg, #fff, rgba(184,134,11,0.05))', border: '1px solid rgba(184,134,11,0.2)' }}>
+                                    <span style={label}>🪄 Magic Text Effect Scan</span>
+                                    <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', marginBottom: 10, lineHeight: 1.5 }}>
+                                        Paste URL gambar (Google/Pinterest) dengan efek tulisan keren, AI akan meniru gayanya untuk Headline Anda.
+                                    </div>
+                                    <input type="text" value={magicHeadlineUrl} placeholder="Paste link efek teks (misal: Quest 3D)..."
+                                        style={{ ...inp, marginBottom: 8 }}
+                                        onChange={e => setMagicHeadlineUrl(e.target.value)} />
+                                    <button onClick={handleScanEffect} disabled={scanningEffect || !magicHeadlineUrl.trim()}
+                                        style={{ width: '100%', padding: '9px 0', borderRadius: 10, background: 'linear-gradient(135deg, #1a1a1a, #444)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                                        {scanningEffect ? '🤖 Scanning Effect...' : '🧪 Terapkan Efek Magic'}
+                                    </button>
+                                    {headlineStyle && (
+                                        <button onClick={() => setHeadlineStyle(null)} style={{ width: '100%', marginTop: 6, background: 'transparent', border: 'none', color: '#e55', fontSize: 10, fontWeight: 700, cursor: 'pointer' }}>
+                                            ↺ Hapus Efek & Reset
+                                        </button>
+                                    )}
+                                </div>
+
                                 {schema.textElements.map(el => (
                                     <div key={el.id} style={card}>
                                         <span style={label}>{el.role === 'headline' ? '🔤' : el.role === 'price' ? '💰' : el.role === 'badge' ? '🏷️' : el.role === 'cta' ? '🎯' : '✏️'} {el.role}</span>
