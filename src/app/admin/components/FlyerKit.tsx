@@ -30,9 +30,10 @@ interface FlyerCanvasProps {
     editedImages: Record<string, string>;
     scale: number;
     headlineStyle?: any;
+    magicImageSrc?: string;
 }
 
-function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, headlineStyle }: FlyerCanvasProps) {
+function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, headlineStyle, magicImageSrc }: FlyerCanvasProps) {
     const { w, h } = FLYER_DIMS[ratio];
     const primaryColor = brand.primaryColor || schema.colorPalette.primary || '#B8860B';
     const heroBg = editedImages['img-hero'] || (brand as any).heroImage;
@@ -61,8 +62,8 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, h
 
     return (
         <>
-            {schema.typography.headingFont && (
-                <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?family=${schema.typography.headingFont.replace(/ /g, '+')}:wght@400;700;800;900&family=${schema.typography.bodyFont?.replace(/ /g, '+') || 'Inter'}:wght@400;500;600&display=swap`} />
+            {(schema.typography.headingFont || (headlineStyle?.fontFamily)) && (
+                <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?family=${(headlineStyle?.fontFamily || schema.typography.headingFont).replace(/ /g, '+')}:wght@400;700;800;900&family=${schema.typography.bodyFont?.replace(/ /g, '+') || 'Inter'}:wght@400;500;600&display=swap`} />
             )}
             <div style={{
                 width: w * scale,
@@ -141,7 +142,9 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, h
                 {/* ── Text Elements ── */}
                 {schema.textElements.map((el) => {
                     const text = getTextContent(el);
+                    // If magicImageSrc is provided, skip the headline text (image replaces it)
                     if (!text || el.role === 'brand') return null;
+                    if (el.role === 'headline' && magicImageSrc) return null;
 
                     const isBadge = el.role === 'badge';
                     const isPrice = el.role === 'price';
@@ -165,18 +168,27 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, h
                     // Magic Headline Logic
                     const isMagicHeadline = el.role === 'headline' && headlineStyle;
                     const magicCss: React.CSSProperties = isMagicHeadline ? {
-                        background: headlineStyle.color.includes('gradient') ? headlineStyle.color : undefined,
-                        WebkitBackgroundClip: headlineStyle.color.includes('gradient') ? 'text' : undefined,
-                        WebkitTextFillColor: headlineStyle.color.includes('gradient') ? 'transparent' : headlineStyle.color,
-                        WebkitTextStroke: headlineStyle.webkitTextStroke ? `${parseInt(headlineStyle.webkitTextStroke) * scale}px ${headlineStyle.webkitTextStroke.split(' ')[1]}` : undefined,
+                        fontFamily: headlineStyle.fontFamily ? `'${headlineStyle.fontFamily}', ${fontMap[schema.fontStyle]}` : undefined,
+                        fontWeight: headlineStyle.fontWeight || 900,
+                        background: (headlineStyle.color && headlineStyle.color.includes('gradient')) ? headlineStyle.color : undefined,
+                        WebkitBackgroundClip: (headlineStyle.color && headlineStyle.color.includes('gradient')) ? 'text' : undefined,
+                        WebkitTextFillColor: (headlineStyle.color && headlineStyle.color.includes('gradient')) ? 'transparent' : (headlineStyle.color || '#fff'),
+                        WebkitTextStroke: headlineStyle.webkitTextStroke ? (() => {
+                            const val = String(headlineStyle.webkitTextStroke).toLowerCase();
+                            const widthMatch = val.match(/(\d+)px/);
+                            const width = widthMatch ? parseInt(widthMatch[1]) : 2;
+                            const color = val.split(' ').pop() || '#fff';
+                            return `${width * scale}px ${color}`;
+                        })() : undefined,
                         textShadow: headlineStyle.textShadow ? headlineStyle.textShadow.split(',').map((s: string) => {
                             const parts = s.trim().split(' ');
                             return parts.map(p => p.includes('px') ? (parseFloat(p) * scale) + 'px' : p).join(' ');
-                        }).join(', ') : undefined,
-                        letterSpacing: headlineStyle.letterSpacing,
-                        textTransform: headlineStyle.textTransform as any,
+                        }).join(', ') : '0 4px 20px rgba(0,0,0,0.5)',
+                        letterSpacing: headlineStyle.letterSpacing || 'normal',
+                        textTransform: (headlineStyle.textTransform as any) || 'uppercase',
                         transform: (posStyle.transform || '') + (headlineStyle.skew ? ` skew(${headlineStyle.skew})` : ''),
-                        fontSize: (parseFloat(FONT_SIZE_MAP[el.style.fontSize]) * 1.5 * scale) + 'px', // Boost size for magic text
+                        fontSize: (parseFloat(FONT_SIZE_MAP[el.style.fontSize]) * 1.5 * scale) + 'px',
+                        lineHeight: 1.0,
                     } : {};
 
                     return (
@@ -247,6 +259,27 @@ function FlyerCanvas({ schema, brand, ratio, editedTexts, editedImages, scale, h
                         </div>
                     );
                 })}
+
+                {/* ── Magic Headline Image Overlay ── */}
+                {magicImageSrc && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '35%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '90%',
+                        zIndex: 6,
+                        pointerEvents: 'none',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}>
+                        <img
+                            src={magicImageSrc}
+                            alt="Magic Headline"
+                            style={{ maxWidth: '100%', maxHeight: 200 * scale, objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }}
+                        />
+                    </div>
+                )}
 
                 {/* ── Brand Bar ── */}
                 <div style={{
@@ -384,34 +417,74 @@ interface FlyerKitProps { data: ItineraryPayload; }
 export default function FlyerKit({ data }: FlyerKitProps) {
     const { brand, meta, days, inclusions, highlights } = data;
 
-    // State for Magic Text Effect
-    const [magicHeadlineUrl, setMagicHeadlineUrl] = useState('');
-    const [scanningEffect, setScanningEffect] = useState(false);
-    const [headlineStyle, setHeadlineStyle] = useState<any>(null);
+    // ─── Magic Headline via Gemini + Clipboard ───────────────────────────
+    const [magicHeadlineText, setMagicHeadlineText] = useState(() => '');
+    const [magicImageSrc, setMagicImageSrc] = useState<string>(''); // base64 result from Gemini
+    const [pasteHint, setPasteHint] = useState('');
+    const magicFileRef = useRef<HTMLInputElement>(null);
 
-    const handleScanEffect = async () => {
-        if (!magicHeadlineUrl.trim()) return;
-        setScanningEffect(true);
+    // Build Gemini prompt
+    const buildGeminiPrompt = (customText?: string) => {
+        const text = customText || magicHeadlineText || meta.title;
+        return `Ubah teks dalam gambar ini menjadi: "${text}". Pertahankan SEMUA gaya visual: warna, efek 3D, bayangan, stroke, dan tipografi IDENTIK dengan gambar asli. Hanya teks yang berubah.`;
+    };
+
+    const openGemini = () => {
+        const prompt = buildGeminiPrompt();
+        navigator.clipboard.writeText(prompt).catch(() => { });
+        window.open('https://gemini.google.com', '_blank');
+        setPasteHint('✅ Prompt sudah di-copy! Paste di Gemini, generate, lalu copy gambar hasilnya & paste di sini.');
+    };
+
+    // Paste image from clipboard (Ctrl+V or button)
+    const handlePasteFromClipboard = async () => {
         try {
-            const res = await fetch('/api/flyer/analyze-text-effect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imageUrl: magicHeadlineUrl }),
-            });
-            const result = await res.json();
-            if (result.style) {
-                setHeadlineStyle(result.style);
-                setSidebarTab('texts');
+            const items = await navigator.clipboard.read();
+            for (const item of items) {
+                const imgType = item.types.find(t => t.startsWith('image/'));
+                if (imgType) {
+                    const blob = await item.getType(imgType);
+                    const reader = new FileReader();
+                    reader.onload = () => setMagicImageSrc(reader.result as string);
+                    reader.readAsDataURL(blob);
+                    setPasteHint('✅ Gambar berhasil dipaste!');
+                    return;
+                }
             }
-        } catch (e) {
-            console.error('Magic Scan failure', e);
-        } finally {
-            setScanningEffect(false);
+            setPasteHint('⚠️ Tidak ada gambar di clipboard. Copy dulu gambar dari Gemini.');
+        } catch {
+            setPasteHint('⚠️ Akses clipboard ditolak. Coba Ctrl+V di area paste, atau pakai tombol Upload.');
         }
     };
 
-    // Replace the text-headline rendering block in FlyerCanvas helper...
-    // Note: To keep things clean, I will modify the internal FlyerCanvas logic via replacement
+    // Handle Ctrl+V on paste-zone div
+    const handlePasteEvent = (e: React.ClipboardEvent) => {
+        const item = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
+        if (!item) return;
+        const blob = item.getAsFile();
+        if (!blob) return;
+        const reader = new FileReader();
+        reader.onload = () => setMagicImageSrc(reader.result as string);
+        reader.readAsDataURL(blob);
+        setPasteHint('✅ Gambar berhasil dipaste!');
+    };
+
+    // Handle file upload fallback
+    const handleMagicFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => setMagicImageSrc(reader.result as string);
+        reader.readAsDataURL(file);
+        setPasteHint('✅ Gambar di-upload.');
+    };
+
+    // ─── Deprecated magic effect states kept for lint ───
+    const [magicHeadlineUrl] = useState('');
+    const [scanningEffect] = useState(false);
+    const [headlineStyle] = useState<any>(null);
+    const [magicPreview] = useState<string>('');
+
     const [ratio, setRatio] = useState<FlyerRatio>('4:5');
     const [schema, setSchema] = useState<DesignSchema | null>(null);
     const [analyzing, setAnalyzing] = useState(false);
@@ -630,6 +703,7 @@ export default function FlyerKit({ data }: FlyerKitProps) {
                                     editedImages={editedImages}
                                     scale={SCALE}
                                     headlineStyle={headlineStyle}
+                                    magicImageSrc={magicImageSrc}
                                 />
                             </div>
 
@@ -777,18 +851,71 @@ export default function FlyerKit({ data }: FlyerKitProps) {
                                 <div style={{ ...card, background: 'linear-gradient(135deg, #fff, rgba(184,134,11,0.05))', border: '1px solid rgba(184,134,11,0.2)' }}>
                                     <span style={label}>🪄 Magic Text Effect Scan</span>
                                     <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', marginBottom: 10, lineHeight: 1.5 }}>
-                                        Paste URL gambar (Google/Pinterest) dengan efek tulisan keren, AI akan meniru gayanya untuk Headline Anda.
+                                        Upload gambar efek teks dari komputer, atau simpan gambar dari Pinterest/Google dulu lalu upload. AI akan meniru gayanya untuk Headline.
                                     </div>
-                                    <input type="text" value={magicHeadlineUrl} placeholder="Paste link efek teks (misal: Quest 3D)..."
-                                        style={{ ...inp, marginBottom: 8 }}
-                                        onChange={e => setMagicHeadlineUrl(e.target.value)} />
-                                    <button onClick={handleScanEffect} disabled={scanningEffect || !magicHeadlineUrl.trim()}
-                                        style={{ width: '100%', padding: '9px 0', borderRadius: 10, background: 'linear-gradient(135deg, #1a1a1a, #444)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                                        {scanningEffect ? '🤖 Scanning Effect...' : '🧪 Terapkan Efek Magic'}
+
+                                    {/* Hidden file input */}
+                                    <input
+                                        ref={magicFileRef}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleMagicFileChange}
+                                    />
+
+                                    {/* Input: teks headline yang diinginkan */}
+                                    <div style={{ marginBottom: 8 }}>
+                                        <span style={{ ...label, marginBottom: 4 }}>Teks Headline</span>
+                                        <input
+                                            type="text"
+                                            value={magicHeadlineText || (editedTexts['text-headline'] ?? meta.title)}
+                                            placeholder={meta.title}
+                                            style={{ ...inp, marginBottom: 0 }}
+                                            onChange={e => setMagicHeadlineText(e.target.value)}
+                                        />
+                                    </div>
+
+                                    {/* Step 1: Buka Gemini */}
+                                    <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', marginBottom: 8, lineHeight: 1.6 }}>
+                                        <b>Cara pakai:</b><br />
+                                        1. Klik tombol di bawah — Gemini terbuka + prompt sudah di-copy<br />
+                                        2. Paste prompt + gambar referensi di Gemini → Generate<br />
+                                        3. Klik kanan hasil → <b>Copy Image</b><br />
+                                        4. Paste di kotak bawah (Ctrl+V)
+                                    </div>
+
+                                    <button
+                                        onClick={openGemini}
+                                        style={{ width: '100%', padding: '9px 0', borderRadius: 10, background: 'linear-gradient(135deg, #1557b0, #4285f4)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8 }}>
+                                        🔗 Buka Gemini + Copy Prompt
                                     </button>
-                                    {headlineStyle && (
-                                        <button onClick={() => setHeadlineStyle(null)} style={{ width: '100%', marginTop: 6, background: 'transparent', border: 'none', color: '#e55', fontSize: 10, fontWeight: 700, cursor: 'pointer' }}>
-                                            ↺ Hapus Efek & Reset
+
+                                    {/* Step 2: Paste Zone */}
+                                    <div
+                                        tabIndex={0}
+                                        onPaste={handlePasteEvent}
+                                        onClick={handlePasteFromClipboard}
+                                        style={{ width: '100%', minHeight: magicImageSrc ? 100 : 60, borderRadius: 10, border: '2px dashed rgba(66,133,244,0.4)', background: magicImageSrc ? '#000' : 'rgba(66,133,244,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', marginBottom: 6, outline: 'none' }}>
+                                        {magicImageSrc
+                                            ? <img src={magicImageSrc} style={{ maxWidth: '100%', maxHeight: 160, objectFit: 'contain' }} alt="magic headline" />
+                                            : <span style={{ fontSize: 11, color: 'rgba(66,133,244,0.7)', fontWeight: 600, textAlign: 'center', padding: '0 12px' }}>📋 Klik di sini atau Ctrl+V untuk paste gambar dari Gemini</span>
+                                        }
+                                    </div>
+
+                                    {/* Upload fallback */}
+                                    <button onClick={() => magicFileRef.current?.click()} style={{ width: '100%', padding: '6px 0', borderRadius: 8, background: 'transparent', border: '1px solid rgba(0,0,0,0.1)', color: '#666', fontSize: 10, fontWeight: 600, cursor: 'pointer', marginBottom: 6 }}>
+                                        📁 Atau upload file gambar
+                                    </button>
+
+                                    {pasteHint && (
+                                        <div style={{ fontSize: 10, padding: '6px 10px', borderRadius: 7, background: pasteHint.startsWith('✅') ? 'rgba(0,180,0,0.08)' : 'rgba(255,150,0,0.1)', color: pasteHint.startsWith('✅') ? '#2a7a2a' : '#a06000', fontWeight: 600, marginBottom: 6 }}>
+                                            {pasteHint}
+                                        </div>
+                                    )}
+
+                                    {magicImageSrc && (
+                                        <button onClick={() => { setMagicImageSrc(''); setPasteHint(''); }} style={{ width: '100%', background: 'transparent', border: 'none', color: '#e55', fontSize: 10, fontWeight: 700, cursor: 'pointer' }}>
+                                            ↺ Hapus & Reset
                                         </button>
                                     )}
                                 </div>

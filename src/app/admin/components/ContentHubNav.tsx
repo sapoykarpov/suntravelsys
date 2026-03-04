@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-type HubTab = 'dmi' | 'microblog' | 'copywriting' | 'flyer';
+type HubTab = 'dmi' | 'microblog' | 'copywriting' | 'flyer' | 'flyer-studio';
 
 interface ContentHubNavProps {
     activeTab: HubTab;
@@ -17,6 +17,7 @@ const TABS: { id: HubTab; label: string; icon: string; badge?: string }[] = [
     { id: 'microblog', label: 'Micro-Blog', icon: '📱', badge: 'New' },
     { id: 'copywriting', label: 'Copywriting', icon: '✍️', badge: 'New' },
     { id: 'flyer', label: 'Flyer Maker', icon: '✦', badge: 'Beta' },
+    { id: 'flyer-studio', label: 'Flyer Studio', icon: '✨', badge: 'Pro' },
 ];
 
 export default function ContentHubNav({
