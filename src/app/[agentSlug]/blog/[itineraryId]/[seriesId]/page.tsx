@@ -75,14 +75,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: `${series.angle} — ${data.meta.title}`,
         openGraph: {
             title: `${series.title}: ${data.meta.title}`,
-            description: series.angle,
-            images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+            description: `${series.angle} • Tips & Cerita Perjalanan dari ${data.brand.name}`,
+            images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: series.title }] : [],
             type: 'article',
             siteName: data.brand.name,
+            locale: 'id_ID',
         },
         twitter: {
             card: 'summary_large_image',
-            title: series.title,
+            title: `${series.title} — ${data.brand.name}`,
             description: series.angle,
             images: ogImage ? [ogImage] : [],
         }
