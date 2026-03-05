@@ -1,5 +1,6 @@
 'use client';
 
+// Production deployment trigger
 import { useState } from 'react';
 import Link from 'next/link';
 import DMIViewer from '@/components/DMIViewer';
