@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ItineraryPayload } from '@/types/itinerary';
 import { searchUnsplashPhotosClient } from '@/lib/utils/unsplash';
+import { Save, Loader2, CheckCircle2 } from 'lucide-react';
+import { updateItineraryContent } from '../actions';
 
 // ─── Font Pairs ────────────────────────────────────────────────────────────────
 
@@ -325,6 +327,7 @@ function QCSidebar({ slide, brand, seriesId, itineraryId, ratio, textSettings, o
     const [photoResults, setPhotoResults] = useState<{ url: string; thumb: string; alt: string; credit: string }[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [copied, setCopied] = useState(false);
+    const [apiStatus, setApiStatus] = useState<'ok' | 'missing_key'>('ok');
 
     const agentSlug = brand.name.toLowerCase().replace(/\s+/g, '-');
     const publicUrl = `/${agentSlug}/blog/${itineraryId}/${seriesId}`;
@@ -336,7 +339,10 @@ function QCSidebar({ slide, brand, seriesId, itineraryId, ratio, textSettings, o
             setSearchQuery(q);
             setSearching(true);
             searchUnsplashPhotosClient(q, 8)
-                .then(r => setPhotoResults(r.photos))
+                .then(r => {
+                    setPhotoResults(r.photos);
+                    if (r.error === 'MISSING_API_KEY') setApiStatus('missing_key');
+                })
                 .catch(() => { })
                 .finally(() => setSearching(false));
         }
@@ -349,6 +355,7 @@ function QCSidebar({ slide, brand, seriesId, itineraryId, ratio, textSettings, o
         try {
             const r = await searchUnsplashPhotosClient(searchQuery, 8);
             setPhotoResults(r.photos);
+            if (r.error === 'MISSING_API_KEY') setApiStatus('missing_key');
         } finally { setSearching(false); }
     };
 
@@ -597,6 +604,12 @@ function QCSidebar({ slide, brand, seriesId, itineraryId, ratio, textSettings, o
                                 <span style={label}>🔍 Cari di Unsplash</span>
                                 {searching && <span style={{ fontSize: 10, color: '#B8860B' }}>Searching...</span>}
                             </div>
+
+                            {apiStatus === 'missing_key' && (
+                                <div style={{ marginBottom: 12, padding: '10px 12px', background: 'rgba(59,130,246,0.06)', border: '1px dashed rgba(59,130,246,0.3)', borderRadius: 10, color: '#3B82F6', fontSize: 10, lineHeight: 1.5 }}>
+                                    <strong>ℹ️ Demo Mode:</strong> Unsplash API Key belum diset di .env.local. Gambar yang muncul saat ini adalah random.
+                                </div>
+                            )}
                             <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
                                 <input type="text" value={searchQuery} placeholder="e.g. Seoul Korea night"
                                     style={{ ...inp, flex: 1, fontSize: 12 }}
@@ -663,15 +676,46 @@ interface MicroblogKitProps { data: ItineraryPayload; }
 
 export default function MicroblogKit({ data }: MicroblogKitProps) {
     const allSeries = generateSeries(data);
-    const [activeSeries, setActiveSeries] = useState(allSeries[0].id);
-    const [activeSlide, setActiveSlide] = useState(0);
-    const [ratio, setRatio] = useState<SlideRatio>('4:5');
+    const [activeSeries, setActiveSeries] = useState(data.assets_config?.microblog?.activeSeries || allSeries[0].id);
+    const [activeSlide, setActiveSlide] = useState(data.assets_config?.microblog?.activeSlide || 0);
+    const [ratio, setRatio] = useState<SlideRatio>(data.assets_config?.microblog?.ratio || '4:5');
     const [downloading, setDownloading] = useState(false);
-    const [textSettings, setTextSettings] = useState<SlideTextSettings>(() => makeDefaultSettings(data.brand));
+    const [saving, setSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [textSettings, setTextSettings] = useState<SlideTextSettings>(() => data.assets_config?.microblog?.textSettings || makeDefaultSettings(data.brand));
     const [seriesSlides, setSeriesSlides] = useState<Record<string, MicroblogSlide[]>>(
-        () => Object.fromEntries(allSeries.map(s => [s.id, s.slides]))
+        () => data.assets_config?.microblog?.seriesSlides || Object.fromEntries(allSeries.map(s => [s.id, s.slides]))
     );
     const largePreviewRef = useRef<HTMLDivElement>(null);
+
+    const handleSave = async () => {
+        setSaving(true);
+        setSaveStatus('idle');
+        try {
+            const result = await updateItineraryContent(data.id, {
+                assets_config: {
+                    ...data.assets_config,
+                    microblog: {
+                        activeSeries,
+                        activeSlide,
+                        ratio,
+                        textSettings,
+                        seriesSlides
+                    }
+                }
+            });
+            if (result.success) {
+                setSaveStatus('success');
+                setTimeout(() => setSaveStatus('idle'), 3000);
+            } else {
+                setSaveStatus('error');
+            }
+        } catch (err) {
+            setSaveStatus('error');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const currentSeries = allSeries.find(s => s.id === activeSeries)!;
     const currentSlides = seriesSlides[activeSeries] || currentSeries.slides;
@@ -743,6 +787,28 @@ export default function MicroblogKit({ data }: MicroblogKitProps) {
                     ))}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        style={{
+                            padding: '6px 14px',
+                            background: saveStatus === 'success' ? '#22C55E' : '#FFFFFF',
+                            color: saveStatus === 'success' ? '#fff' : 'rgba(0,0,0,0.6)',
+                            borderRadius: 10,
+                            fontWeight: 700,
+                            fontSize: 11,
+                            border: '1.5px solid rgba(0,0,0,0.08)',
+                            cursor: saving ? 'wait' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            transition: 'all 0.3s'
+                        }}
+                    >
+                        {saving ? <Loader2 size={12} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle2 size={12} /> : <Save size={12} />}
+                        {saving ? 'Saving...' : saveStatus === 'success' ? 'Saved!' : 'Save Progress'}
+                    </button>
+
                     <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(0,0,0,0.3)' }}>Format:</span>
                     <div className="mb4-ratio-toggle">
                         {(['4:5', '9:16'] as SlideRatio[]).map(r => (

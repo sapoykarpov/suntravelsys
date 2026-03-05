@@ -3,20 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Calendar,
-    Users,
-    MapPin,
-    Clock,
-    ArrowUp,
-    Star,
-    X,
-    MessageCircle,
-    Instagram,
-    Globe,
-    Share2,
-    Play
+    Plane, Coffee, Bus, Camera, MapPin, Calendar, Heart, Share2, Star, Check, Play, Zap, Info, Users, X, Instagram, Globe, MessageCircle, Clock, ArrowUp
 } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 import { imageWithFallback } from '@/lib/utils/images';
 
 export default function ThemeBaliAndi({
@@ -46,6 +36,7 @@ export default function ThemeBaliAndi({
 
     const whatsappUrl = data.brand.whatsapp || data.brand.contact?.whatsapp;
     const email = data.brand.email || data.brand.contact?.email;
+    const primary = data.brand.primaryColor || '#c9a962';
 
     return (
         <div className="ba-root">
@@ -426,6 +417,8 @@ export default function ThemeBaliAndi({
                     </div>
                 </section>
 
+                <OptionalSections data={data} primaryColor={primary} />
+
                 {/* Accomodation */}
                 {data.hotels?.[0] && (
                     <section className="ba-section">
@@ -459,6 +452,20 @@ export default function ThemeBaliAndi({
                         <span className="ba-section-label">Investment</span>
                         <div className="font-serif italic gold-text text-5xl mb-4">{data.meta.price}</div>
                         <p className="text-white/40 text-xs italic mb-12">{data.meta.priceNote}</p>
+
+                        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 && (
+                            <div className="grid gap-3 mb-12">
+                                {data.whatsappConfig.numbers.map((num, i) => (
+                                    <a key={i}
+                                        href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                        className="ba-inquire"
+                                        style={{ width: '100%', textAlign: 'center' }}
+                                    >
+                                        Chat with {num.label || 'Contact'}
+                                    </a>
+                                ))}
+                            </div>
+                        )}
 
                         <div className="grid gap-8 text-left">
                             <div className="glass-card p-8 rounded-3xl">
@@ -528,13 +535,23 @@ export default function ThemeBaliAndi({
                                     <button className="text-white/40 hover:text-white transition-colors">
                                         <Share2 size={24} />
                                     </button>
-                                    <a
-                                        href={whatsappUrl ? `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}` : `mailto:${email}`}
-                                        className="ba-inquire"
-                                        style={{ padding: '14px 40px', fontSize: '13px' }}
-                                    >
-                                        Reservasi
-                                    </a>
+                                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                                        <a
+                                            href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                                            className="ba-inquire"
+                                            style={{ padding: '14px 40px', fontSize: '13px' }}
+                                        >
+                                            Chat Us
+                                        </a>
+                                    ) : (
+                                        <a
+                                            href={whatsappUrl ? `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}` : `mailto:${email}`}
+                                            className="ba-inquire"
+                                            style={{ padding: '14px 40px', fontSize: '13px' }}
+                                        >
+                                            Reservasi
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
@@ -545,6 +562,4 @@ export default function ThemeBaliAndi({
     );
 }
 
-const Check = ({ size, className, style }: any) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}><polyline points="20 6 9 17 4 12"></polyline></svg>
-);
+

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { parseItinerary, FileData } from '@/lib/ai/itinerary-parser';
 import { generateSlug } from '@/lib/utils/slug';
+import { searchUnsplashPhotos } from '@/lib/utils/unsplash';
 
 export const maxDuration = 60; // Allow more time for AI parsing
 
@@ -104,14 +105,18 @@ export async function POST(request: NextRequest) {
                     groupSize: primaryContent.groupSize,
                     price: primaryContent.price,
                     priceNote: primaryContent.priceNote || '',
+                    coverImage: (await searchUnsplashPhotos(parsedOriginal.days[0]?.location.split(',')[0] || 'travel', 1)).photos[0]?.url || '',
                 },
                 highlights: primaryContent.highlights,
                 itinerary_summary: primaryContent.itinerarySummary,
                 inclusions: primaryContent.inclusions,
                 exclusions: primaryContent.exclusions,
-                days: primaryContent.days.map((day) => ({
-                    ...day,
-                    heroImage: '',
+                days: await Promise.all(primaryContent.days.map(async (day) => {
+                    const search = await searchUnsplashPhotos(day.location.split(',')[0], 1);
+                    return {
+                        ...day,
+                        heroImage: search.photos[0]?.url || '',
+                    };
                 })),
                 hotels: primaryContent.hotels.map((hotel) => ({
                     ...hotel,

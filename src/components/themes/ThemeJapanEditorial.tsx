@@ -14,10 +14,14 @@ import {
     Car,
     Camera,
     Share2,
-    Play
+    Play,
+    Bus, // Added from new import
+    Heart, // Added from new import
+    Star // Added from new import
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 import { imageWithFallback } from '@/lib/utils/images';
 
 export default function ThemeJapanEditorial({
@@ -276,7 +280,8 @@ export default function ThemeJapanEditorial({
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-                    minHeight: '40vh'
+                    minHeight: '80vh',
+                    padding: '100px 24px'
                 }}>
                     <div className="je-hero-meta">
                         <div className="je-meta-item">
@@ -383,19 +388,36 @@ export default function ThemeJapanEditorial({
                     </div>
                 </section>
 
+                <OptionalSections data={data} primaryColor={primaryColor} />
+
                 {/* Pricing */}
                 <section className="je-price-section">
                     <span className="je-section-label">Investment</span>
                     <div className="je-price-val">{data.meta.price}</div>
                     {data.meta.priceNote && <p className="je-price-note">{data.meta.priceNote}</p>}
-                    <a
-                        href={`https://wa.me/${(data.brand as any).whatsapp?.replace(/[^0-9]/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="je-price-cta"
-                    >
-                        Reserve Now
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+                            {data.whatsappConfig.numbers.map((num, idx) => (
+                                <a key={idx}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    target="_blank" rel="noreferrer"
+                                    className="je-price-cta"
+                                    style={{ width: '100%', maxWidth: 300, textAlign: 'center' }}
+                                >
+                                    Chat with {num.label || 'Contact'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={`https://wa.me/${(data.brand.whatsapp || (data.brand as any).whatsapp)?.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="je-price-cta"
+                        >
+                            Reserve Now
+                        </a>
+                    )}
 
                     <div className="je-inc-exc-grid">
                         <div>
@@ -436,12 +458,21 @@ export default function ThemeJapanEditorial({
 
             <div className={`je-footer-bar ${!isCoverVisible ? 'v-active' : ''}`}>
                 <div className="je-footer-inner" style={{ justifyContent: 'center' }}>
-                    <a
-                        href={`https://wa.me/${(data.brand as any).whatsapp?.replace(/[^0-9]/g, '')}`}
-                        className="je-book-btn"
-                    >
-                        <MessageCircle size={16} /> Reserve Now
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <a
+                            href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                            className="je-book-btn"
+                        >
+                            <MessageCircle size={16} /> Chat with Us
+                        </a>
+                    ) : (
+                        <a
+                            href={`https://wa.me/${(data.brand.whatsapp || (data.brand as any).whatsapp)?.replace(/[^0-9]/g, '')}`}
+                            className="je-book-btn"
+                        >
+                            <MessageCircle size={16} /> Reserve Now
+                        </a>
+                    )}
                 </div>
             </div>
 

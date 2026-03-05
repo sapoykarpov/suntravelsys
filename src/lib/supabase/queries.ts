@@ -195,6 +195,7 @@ interface ItineraryRow {
     }[];
     original_submission: Record<string, unknown> | null;
     slug: string;
+    assets_config?: any;
     content_original?: any;
     content_personalized?: any;
     active_version?: 'original' | 'personalized';
@@ -277,6 +278,7 @@ function toItineraryPayload(client: ClientRow, itinerary: ItineraryRow): Itinera
         days: itinerary.days || [],
         hotels: itinerary.hotels || [],
         brand,
+        assets_config: itinerary.assets_config || undefined,
         content_original: itinerary.content_original,
         content_personalized: itinerary.content_personalized,
         active_version: (itinerary.active_version as any) || 'personalized',

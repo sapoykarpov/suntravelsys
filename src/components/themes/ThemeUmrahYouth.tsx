@@ -15,6 +15,7 @@ import {
     Play
 } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 
 export default function ThemeUmrahYouth({
     data,
@@ -86,8 +87,10 @@ export default function ThemeUmrahYouth({
                 .uy-hero-overlay {
                     position: absolute; inset: 0;
                     background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 60%);
-                    display: flex; flex-direction: column; justify-content: flex-end;
-                    padding: 32px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: ${data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center'};
+                    padding: 80px 32px;
                 }
                 .uy-hero-h1 {
                     font-size: clamp(32px, 8vw, 48px); font-weight: 900; color: #fff;
@@ -160,11 +163,7 @@ export default function ThemeUmrahYouth({
                 </nav>
 
                 <header className="uy-hero">
-                    <div className="uy-hero-card" style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-                    }}>
+                    <div className="uy-hero-card">
                         <img src={data.meta.coverImage || data.days[0]?.heroImage} className="uy-hero-img" alt="" />
                         <div className="uy-hero-overlay">
                             <h1 className="uy-hero-h1" style={{
@@ -225,16 +224,31 @@ export default function ThemeUmrahYouth({
                     ))}
                 </section>
 
+                <OptionalSections data={data} primaryColor={primary} />
+
                 <section className="uy-section">
                     <div className="uy-price-card">
                         <div style={{ fontSize: '10px', fontWeight: 700, opacity: 0.6, letterSpacing: 2, marginBottom: 8 }}>INVESTMENT</div>
                         <div className="uy-price-val">{data.meta.price}</div>
-                        <a
-                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
-                            style={{ display: 'block', background: '#fff', color: primary, textAlign: 'center', padding: '16px', borderRadius: '16px', fontWeight: 900, fontSize: '13px', textDecoration: 'none', letterSpacing: 2 }}
-                        >
-                            GET THE SPOT
-                        </a>
+                        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                            <div className="grid gap-3">
+                                {data.whatsappConfig.numbers.map((num, i) => (
+                                    <a key={i}
+                                        href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                        style={{ display: 'block', background: '#fff', color: primary, textAlign: 'center', padding: '16px', borderRadius: '16px', fontWeight: 900, fontSize: '13px', textDecoration: 'none', letterSpacing: 2 }}
+                                    >
+                                        CHAT {num.label?.toUpperCase() || 'US'}
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <a
+                                href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
+                                style={{ display: 'block', background: '#fff', color: primary, textAlign: 'center', padding: '16px', borderRadius: '16px', fontWeight: 900, fontSize: '13px', textDecoration: 'none', letterSpacing: 2 }}
+                            >
+                                GET THE SPOT
+                            </a>
+                        )}
                     </div>
                 </section>
 
@@ -250,13 +264,29 @@ export default function ThemeUmrahYouth({
                 <button onClick={() => setLiked(!liked)} style={{ background: 'none', border: 'none', color: liked ? '#ef4444' : '#fff', padding: 16 }}>
                     <Heart size={22} fill={liked ? 'currentColor' : 'none'} />
                 </button>
-                <a
-                    href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
-                    className="uy-btn-cta"
-                >
-                    Book Now
-                </a>
-                {data.brand.whatsapp && (
+                {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                    <a
+                        href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                        className="uy-btn-cta"
+                    >
+                        Chat Now
+                    </a>
+                ) : (
+                    <a
+                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
+                        className="uy-btn-cta"
+                    >
+                        Book Now
+                    </a>
+                )}
+                {(data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0) ? (
+                    <a
+                        href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                        style={{ padding: 16, background: '#10b981', borderRadius: '16px', color: '#fff' }}
+                    >
+                        <MessageCircle size={22} />
+                    </a>
+                ) : data.brand.whatsapp && (
                     <a
                         href={`https://wa.me/${data.brand.whatsapp.replace(/[^0-9]/g, '')}`}
                         style={{ padding: 16, background: '#10b981', borderRadius: '16px', color: '#fff' }}

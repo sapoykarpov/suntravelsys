@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllItineraries } from '@/lib/supabase/queries';
 import type { Metadata } from 'next';
 import UploadItineraryButton from './components/UploadItineraryButton';
+import BrandManagerButton from './components/BrandManagerButton';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard — Travel Asset Engine',
@@ -219,6 +220,7 @@ export default async function AdminDashboard() {
           }}>
             ← Back to Preview
           </Link>
+          <BrandManagerButton />
           <UploadItineraryButton />
         </div>
       </header>

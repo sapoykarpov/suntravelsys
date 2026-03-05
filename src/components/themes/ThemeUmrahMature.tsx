@@ -12,6 +12,7 @@ import {
     Play
 } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 
 export default function ThemeUmrahMature({
     data,
@@ -130,7 +131,7 @@ export default function ThemeUmrahMature({
                     font-size: 12px;
                 }
                 .um-hero-text {
-                    position: absolute; bottom: 40px; left: 0; right: 0;
+                    position: relative; z-index: 10;
                     padding: 0 32px;
                     text-align: center;
                     color: #fff;
@@ -393,6 +394,7 @@ export default function ThemeUmrahMature({
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
+                        padding: '100px 0'
                     }}>
                         <img src={data.meta.coverImage || data.days[0]?.heroImage} className="um-hero-img" alt="" />
                         <div className="um-hero-overlay" />
@@ -409,6 +411,8 @@ export default function ThemeUmrahMature({
                 </section>
 
                 {/* Intro */}
+                <OptionalSections data={data} primaryColor={accent} />
+
                 <section className="um-section um-reveal">
                     <h2 className="um-section-title">Kekhusyukan yang Menenangkan</h2>
                     <p className="um-section-p">
@@ -469,6 +473,27 @@ export default function ThemeUmrahMature({
                     </div>
                 </section>
 
+                {/* Price Section */}
+                <section className="um-price-box um-reveal">
+                    <p className="um-price-label">Pilihan Investasi</p>
+                    <div className="um-price-val">{data.meta.price}</div>
+                    <p style={{ opacity: 0.6, fontSize: '13px', fontStyle: 'italic', marginBottom: '32px' }}>{data.meta.priceNote}</p>
+
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div className="grid gap-3">
+                            {data.whatsappConfig.numbers.map((num, i) => (
+                                <a key={i} href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`} className="um-book-btn">
+                                    HUBUNGI {num.label?.toUpperCase() || 'KAMI'} (WA)
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a href={whatsappUrl ? `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}` : `mailto:${email}`} className="um-book-btn">
+                            RESERVASI SEKARANG
+                        </a>
+                    )}
+                </section>
+
                 {/* Footer buttons fixed */}
                 <div className={`um-nav-fixed ${!isCoverVisible ? 'v-active' : ''}`}>
                     <div className="um-nav">
@@ -480,19 +505,36 @@ export default function ThemeUmrahMature({
                                 <Share2 size={20} />
                             </button>
                         </div>
-                        <a
-                            href={whatsappUrl ? `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}` : `mailto:${email}`}
-                            className="um-rect-btn"
-                        >
-                            RESERVASI
-                        </a>
-                        {whatsappUrl && (
-                            <a
-                                href={`https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}`}
-                                className="um-circle-btn um-wa-btn"
-                            >
-                                <MessageCircle size={24} fill="currentColor" />
-                            </a>
+
+                        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                            <div className="flex flex-1 gap-2 mx-2 overflow-x-auto no-scrollbar py-1">
+                                {data.whatsappConfig.numbers.map((num, i) => (
+                                    <a key={i}
+                                        href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                        className="um-rect-btn"
+                                        style={{ minWidth: '140px', fontSize: '10px' }}
+                                    >
+                                        CHAT {num.label?.toUpperCase() || 'OFFICE'}
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <>
+                                <a
+                                    href={whatsappUrl ? `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}` : `mailto:${email}`}
+                                    className="um-rect-btn"
+                                >
+                                    RESERVASI
+                                </a>
+                                {whatsappUrl && (
+                                    <a
+                                        href={`https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}`}
+                                        className="um-circle-btn um-wa-btn"
+                                    >
+                                        <MessageCircle size={24} fill="currentColor" />
+                                    </a>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>

@@ -39,12 +39,13 @@ export async function searchUnsplashPhotos(
     if (!accessKey) {
         return {
             photos: getFallbackPhotos(query, count),
-            error: 'No Unsplash API key configured. Using fallback images.',
+            error: 'MISSING_API_KEY',
         };
     }
 
     try {
-        const encoded = encodeURIComponent(`${query} travel destination`);
+        const q = cleanQuery(query);
+        const encoded = encodeURIComponent(`${q} beautiful landscape travel`);
         const res = await fetch(
             `https://api.unsplash.com/search/photos?query=${encoded}&per_page=${count}&orientation=portrait&content_filter=high`,
             {
@@ -79,8 +80,18 @@ export async function searchUnsplashPhotos(
 }
 
 /**
- * Client-side version for use in 'use client' components
+ * Enhances a query for better travel results and handles "tips" or "prep" keywords
  */
+function cleanQuery(query: string): string {
+    // Remove common non-geographic words that confuse Unsplash
+    let q = query.toLowerCase()
+        .replace(/travel|tips|persiapan|dokumen|budget|packing|wajib|hal|hal-hal|itinerary|guide/g, '')
+        .trim();
+
+    // If empty after cleaning, use 'scenery'
+    return q || 'scenery';
+}
+
 export async function searchUnsplashPhotosClient(
     query: string,
     count: number = 6
@@ -88,13 +99,14 @@ export async function searchUnsplashPhotosClient(
     const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
 
     if (!accessKey) {
-        return { photos: getFallbackPhotos(query, count), error: 'No API key' };
+        return { photos: getFallbackPhotos(query, count), error: 'MISSING_API_KEY' };
     }
 
     try {
-        const encoded = encodeURIComponent(`${query} travel`);
+        const q = cleanQuery(query);
+        const encoded = encodeURIComponent(`${q} aesthetic scenery travel`);
         const res = await fetch(
-            `https://api.unsplash.com/search/photos?query=${encoded}&per_page=${count}&orientation=portrait`,
+            `https://api.unsplash.com/search/photos?query=${encoded}&per_page=${count}&orientation=portrait&content_filter=high`,
             {
                 headers: {
                     Authorization: `Client-ID ${accessKey}`,

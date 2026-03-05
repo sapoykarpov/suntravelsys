@@ -1,19 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-    Heart,
-    ArrowUp,
-    MapPin,
-    Camera,
-    Coffee,
-    Star,
-    Anchor,
-    MessageCircle,
-    Share2,
-    Play
-} from 'lucide-react';
+import { Plane, Moon, Coffee, Bus, Camera, MapPin, Heart, Share2, Star, Check, Play, Zap, Scissors, Bookmark, Anchor, ArrowUp } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 import { imageWithFallback } from '@/lib/utils/images';
 
 export default function ThemeScrapbook({
@@ -166,7 +156,7 @@ export default function ThemeScrapbook({
                 .sb-ticket-h3 { font-family: 'Caveat', cursive; font-size: 36px; color: ${primary}; margin-bottom: 24px; }
                 .sb-ticket-row { display: flex; justify-content: space-between; font-size: 13px; border-bottom: 1px solid #f9f9f9; padding: 12px 0; }
 
-                /* NAV */
+                /* Price */
                 .sb-nav-float {
                     position: fixed; 
                     bottom: 24px; 
@@ -204,7 +194,8 @@ export default function ThemeScrapbook({
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-                    minHeight: '30vh'
+                    minHeight: '70vh',
+                    padding: '100px 20px'
                 }}>
                     <div className="sb-tape" />
                     <h1 className="sb-title" style={{
@@ -260,13 +251,27 @@ export default function ThemeScrapbook({
                     <div className="sb-ticket-row"><span>Stay</span><strong>{data.hotels?.[0]?.name || 'Premium Stay'}</strong></div>
                     <div className="sb-ticket-row" style={{ border: 'none' }}><span>Periode</span><strong>{data.meta.startDate}</strong></div>
 
-                    <a
-                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
-                        className="sb-cta"
-                        style={{ marginTop: 32, display: 'inline-block', padding: '12px 32px' }}
-                    >
-                        Tanyakan Detailnya
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 32 }}>
+                            {data.whatsappConfig.numbers.map((num, i) => (
+                                <a key={i}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    className="sb-cta"
+                                    style={{ display: 'inline-block', padding: '12px 32px' }}
+                                >
+                                    Tanya {num.label || 'CS'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
+                            className="sb-cta"
+                            style={{ marginTop: 32, display: 'inline-block', padding: '12px 32px' }}
+                        >
+                            Tanyakan Detailnya
+                        </a>
+                    )}
                 </section>
 
                 <section style={{ padding: '80px 0', textAlign: 'center', opacity: 0.5 }}>
@@ -279,12 +284,21 @@ export default function ThemeScrapbook({
                 <button onClick={() => setLiked(!liked)} style={{ background: 'none', border: 'none', color: liked ? primary : '#ccc' }}>
                     <Heart size={24} fill={liked ? primary : 'none'} />
                 </button>
-                <a
-                    href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
-                    className="sb-cta"
-                >
-                    Ayo Jalan!
-                </a>
+                {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                    <a
+                        href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                        className="sb-cta"
+                    >
+                        Tanya CS
+                    </a>
+                ) : (
+                    <a
+                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
+                        className="sb-cta"
+                    >
+                        Ayo Jalan!
+                    </a>
+                )}
                 <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ background: 'none', border: 'none', color: '#ccc' }}>
                     <ArrowUp size={24} />
                 </button>

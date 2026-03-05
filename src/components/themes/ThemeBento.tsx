@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Plane, Coffee, Bus, Camera, MapPin, Calendar, Users, Heart, Share2, Star, Check, Play, X, Shield, Sparkles } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 import { imageWithFallback } from '@/lib/utils/images';
-import { Play } from 'lucide-react';
 
 interface Props {
     data: ItineraryPayload;
@@ -70,12 +71,12 @@ export default function ThemeBento({
                 /* HERO */
                 .bento-hero {
                     border-radius: 28px;
-                    min-height: 320px;
+                    min-height: 400px;
                     position: relative;
                     overflow: hidden;
                     display: flex;
                     flex-direction: column;
-                    justify-content: flex-end;
+                    justify-content: ${data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center'};
                     margin-bottom: 16px;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
                 }
@@ -289,9 +290,7 @@ export default function ThemeBento({
 
             <div className="bento-container">
                 {/* Hero */}
-                <div className="bento-hero bento-reveal" style={{
-                    justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-                }}>
+                <div className="bento-hero bento-reveal">
                     <img src={imageWithFallback(data.meta.coverImage || data.days[0]?.heroImage, 'japan')} className="bento-hero-img" alt="" />
                     <div className="bento-hero-overlay" />
                     <div className="bento-hero-content">
@@ -320,20 +319,37 @@ export default function ThemeBento({
                     </div>
                 </div>
 
+                <OptionalSections data={data} primaryColor={primary} />
+
                 {/* Price */}
                 <div className="bento-price bento-reveal">
                     <div className="bento-price-label">Complete Package</div>
                     <div className="bento-price-value">{data.meta.price}</div>
                     <div className="bento-price-note">{data.meta.priceNote}</div>
-                    <a
-                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
-                            ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
-                            : `mailto:${data.brand.email || data.brand.contact?.email}`}
-                        target="_blank" rel="noreferrer"
-                        className="bento-price-cta"
-                    >
-                        Book Your Journey →
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            {data.whatsappConfig.numbers.map((num, idx) => (
+                                <a key={idx}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    target="_blank" rel="noreferrer"
+                                    className="bento-price-cta"
+                                    style={{ margin: 0 }}
+                                >
+                                    Chat with {num.label || 'Contact'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
+                                ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
+                                : `mailto:${data.brand.email || data.brand.contact?.email}`}
+                            target="_blank" rel="noreferrer"
+                            className="bento-price-cta"
+                        >
+                            Book Your Journey →
+                        </a>
+                    )}
                 </div>
 
                 {/* Highlights */}

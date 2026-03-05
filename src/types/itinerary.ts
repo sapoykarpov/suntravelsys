@@ -86,6 +86,31 @@ export interface CoverTextSettings {
   shadowBlur?: number;     // text-shadow blur radius in px
 }
 
+export interface Testimonial {
+  name: string;
+  role?: string;
+  text: string;
+  avatar?: string;
+  rating?: number;
+}
+
+export interface GalleryItem {
+  type: 'image' | 'video';
+  url: string;
+  thumbnail?: string;
+  caption?: string;
+}
+
+export interface DeparturePeriod {
+  date: string;
+  price?: string;
+}
+
+export interface WhatsAppNumber {
+  label: string;
+  number: string;
+}
+
 export interface ItineraryPayload {
   id: string;
   version: string;
@@ -106,13 +131,47 @@ export interface ItineraryPayload {
   itinerarySummary?: string[];
   inclusions: string[];
   exclusions: string[];
+  termsAndConditions?: string[];
+  fontPairing?: string;
+  themePreset?: string;
   days: ItineraryDay[];
   hotels?: Hotel[];
   brand: BrandProfile;
   coverTextSettings?: CoverTextSettings;
+  testimonials?: {
+    enabled: boolean;
+    items: Testimonial[];
+  };
+  gallery?: {
+    enabled: boolean;
+    items: GalleryItem[];
+  };
+  departurePeriods?: {
+    enabled: boolean;
+    items: DeparturePeriod[];
+  };
+  whatsappConfig?: {
+    enabled: boolean;
+    numbers: WhatsAppNumber[];
+  };
   content_original?: any; // Full original parsed object
   content_personalized?: any; // Full personalized parsed object
   active_version?: 'original' | 'personalized';
   language: 'id' | 'en';
   style: 'original' | 'friendly' | 'persuasive' | 'energetic';
+  assets_config?: {
+    flyer_studio?: {
+      elements: any[];
+      ratio: '4:5' | '9:16';
+    };
+    flyer_maker?: {
+      schema: any;
+      referenceUrl: string;
+      ratio?: '4:5' | '9:16';
+      editedTexts: Record<string, string>;
+      editedImages: Record<string, string>;
+    };
+    microblog?: any;
+    copywriting?: any;
+  };
 }

@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Plane, Moon, Coffee, Bus, Camera, MapPin, ChevronRight, Share2, Heart, CheckCircle2, Award, Zap, Shield, Play, X } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 import { imageWithFallback } from '@/lib/utils/images';
-import { Play, X } from 'lucide-react';
 
 interface Props {
     data: ItineraryPayload;
@@ -70,11 +71,13 @@ export default function ThemeAmazingBlack({
                 .ab-hero-content {
                     position: relative; z-index: 2;
                     text-align: center;
-                    padding: 40px 20px;
+                    padding: 80px 24px 140px;
                     width: 100%;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    min-height: 85vh;
+                    justify-content: ${data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center'};
                 }
                 .ab-badge {
                     display: inline-block;
@@ -297,9 +300,7 @@ export default function ThemeAmazingBlack({
             `}} />
 
             {/* HERO */}
-            <section className="ab-hero" style={{
-                justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-            }}>
+            <section className="ab-hero">
                 <img src={imageWithFallback(data.meta.coverImage || data.days[0]?.heroImage, 'japan')} alt="" className="ab-hero-img" />
                 <div className="ab-hero-overlay" />
                 <div className="ab-hero-content">
@@ -391,6 +392,8 @@ export default function ThemeAmazingBlack({
                 </div>
             </section>
 
+            <OptionalSections data={data} primaryColor={gold} />
+
             {/* PRICING */}
             <section className="ab-price-section">
                 <div className="ab-reveal">
@@ -409,15 +412,30 @@ export default function ThemeAmazingBlack({
                         </div>
                     </div>
 
-                    <a
-                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
-                            ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
-                            : `mailto:${data.brand.email || data.brand.contact?.email}`}
-                        target="_blank" rel="noreferrer"
-                        className="ab-cta"
-                    >
-                        Request to Book
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center', marginTop: 32 }}>
+                            {data.whatsappConfig.numbers.map((num, idx) => (
+                                <a key={idx}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    target="_blank" rel="noreferrer"
+                                    className="ab-cta"
+                                    style={{ margin: 0, width: '100%', maxWidth: 300 }}
+                                >
+                                    Chat with {num.label || 'Contact'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
+                                ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
+                                : `mailto:${data.brand.email || data.brand.contact?.email}`}
+                            target="_blank" rel="noreferrer"
+                            className="ab-cta"
+                        >
+                            Request to Book
+                        </a>
+                    )}
                 </div>
             </section>
         </div>

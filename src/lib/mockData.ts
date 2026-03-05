@@ -102,5 +102,36 @@ export const mockItinerary: ItineraryPayload = {
             description: "A meticulously restored century-old riverside property accessible only by boat.",
             imageUrl: "https://images.unsplash.com/photo-1588614959060-4d144f28b207?w=800"
         }
-    ]
+    ],
+    language: 'en',
+    style: 'original',
+    termsAndConditions: [],
+    testimonials: {
+        enabled: true,
+        items: [
+            {
+                name: "Sarah Johnson",
+                role: "Adventurer",
+                text: "The Kyoto Zen Experience was truly life-changing. The level of detail and private access was unlike anything I've experienced.",
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+                rating: 5
+            },
+            {
+                name: "Michael Chen",
+                role: "Luxury Traveler",
+                text: "LuxeTravel Architect knows how to curate perfection. Every meal, every stay, and every transfer was flawless.",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",
+                rating: 5
+            }
+        ]
+    },
+    gallery: {
+        enabled: true,
+        items: [
+            { type: 'image', url: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800', caption: 'Golden Pavilion' },
+            { type: 'image', url: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800', caption: 'Kyoto Streets' },
+            { type: 'image', url: 'https://images.unsplash.com/photo-1528164344705-4754268799db?w=800', caption: 'Fushimi Inari' },
+            { type: 'image', url: 'https://images.unsplash.com/photo-1526481280693-3bfa75ac8efd?w=800', caption: 'Mount Fuji View' }
+        ]
+    }
 };

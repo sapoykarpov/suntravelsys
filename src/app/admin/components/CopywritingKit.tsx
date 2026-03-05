@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import type { ItineraryPayload } from '@/types/itinerary';
+import { Save, Loader2, CheckCircle2 } from 'lucide-react';
+import { updateItineraryContent } from '../actions';
 
 interface CopywritingKitProps {
     data: ItineraryPayload;
@@ -137,11 +139,39 @@ const COPY_VARIANTS = (data: ItineraryPayload) => [
 
 export default function CopywritingKit({ data }: CopywritingKitProps) {
     const variants = COPY_VARIANTS(data);
-    const [activeVariant, setActiveVariant] = useState(variants[0].id);
+    const [activeVariant, setActiveVariant] = useState(data.assets_config?.copywriting?.activeVariant || variants[0].id);
     const [texts, setTexts] = useState<Record<string, string>>(() =>
-        Object.fromEntries(variants.map(v => [v.id, v.generate()]))
+        data.assets_config?.copywriting?.texts || Object.fromEntries(variants.map(v => [v.id, v.generate()]))
     );
     const [copied, setCopied] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+    const handleSave = async () => {
+        setSaving(true);
+        setSaveStatus('idle');
+        try {
+            const result = await updateItineraryContent(data.id, {
+                assets_config: {
+                    ...data.assets_config,
+                    copywriting: {
+                        activeVariant,
+                        texts
+                    }
+                }
+            });
+            if (result.success) {
+                setSaveStatus('success');
+                setTimeout(() => setSaveStatus('idle'), 3000);
+            } else {
+                setSaveStatus('error');
+            }
+        } catch (err) {
+            setSaveStatus('error');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const current = variants.find(v => v.id === activeVariant)!;
 
@@ -269,11 +299,36 @@ export default function CopywritingKit({ data }: CopywritingKitProps) {
             ` }} />
 
             {/* Header */}
-            <div className="cw-header">
-                <div className="cw-title">✍️ Copywriting Kit</div>
-                <div className="cw-subtitle">
-                    Teks promosi siap pakai • Auto-generated dari data itinerary {data.brand.name}
+            <div className="cw-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <div>
+                    <div className="cw-title">✍️ Copywriting Kit</div>
+                    <div className="cw-subtitle">
+                        Teks promosi siap pakai • Auto-generated dari data itinerary {data.brand.name}
+                    </div>
                 </div>
+
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    style={{
+                        padding: '10px 20px',
+                        background: saveStatus === 'success' ? '#22C55E' : '#FFFFFF',
+                        color: saveStatus === 'success' ? '#fff' : '#1a1a1a',
+                        borderRadius: 12,
+                        fontWeight: 700,
+                        fontSize: 13,
+                        border: '1.5px solid rgba(0,0,0,0.08)',
+                        cursor: saving ? 'wait' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        transition: 'all 0.3s',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                    }}
+                >
+                    {saving ? <Loader2 size={16} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle2 size={16} /> : <Save size={16} />}
+                    {saving ? 'Saving...' : saveStatus === 'success' ? 'Saved!' : 'Save Progress'}
+                </button>
             </div>
 
             <div className="cw-grid">

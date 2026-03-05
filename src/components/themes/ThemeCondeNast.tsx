@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import type { ItineraryPayload } from "@/types/itinerary";
+import OptionalSections from '../OptionalSections';
 import {
     Heart,
     Share2,
@@ -17,6 +18,12 @@ import {
     Plane,
     Camera,
     Navigation,
+    Bus,
+    Star,
+    Check,
+    ChevronLeft,
+    ChevronRight,
+    X,
 } from "lucide-react";
 
 export default function ThemeCondeNast({
@@ -55,6 +62,15 @@ export default function ThemeCondeNast({
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    const getHeroStyle = () => {
+        const currentPosition = data.coverTextSettings?.position || 'center';
+        return `
+            .cn-hero {
+                justify-content: ${currentPosition === 'top' ? 'flex-start' : currentPosition === 'bottom' ? 'flex-end' : 'center'} !important;
+            }
+        `;
+    };
+
     const renderActivityIcon = (iconCategory?: string) => {
         switch (iconCategory) {
             case "flight": return <Plane size={18} />;
@@ -67,6 +83,7 @@ export default function ThemeCondeNast({
 
     const primaryColor = data.brand.primaryColor || "#f97316";
     const secondaryColor = data.brand.secondaryColor || "#1c1917";
+    const accentColor = primaryColor; // Assuming primaryColor is the accent color for OptionalSections
 
     return (
         <div className="cn-root">
@@ -106,13 +123,15 @@ export default function ThemeCondeNast({
                     height: 90vh;
                     position: relative;
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    justify-content: center;
                     text-align: center;
                     color: #fff;
                     overflow: hidden;
                     width: 100%;
+                    padding: 100px 0;
                 }
+                ${getHeroStyle()}
                 .cn-hero-bg {
                     position: absolute; inset: 0;
                     background-size: cover;
@@ -387,9 +406,7 @@ export default function ThemeCondeNast({
 
             <div className="cn-container">
                 {/* Hero */}
-                <header ref={heroRef} className="cn-hero" style={{
-                    justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
-                }}>
+                <header ref={heroRef} className="cn-hero">
                     <div className="cn-hero-bg" style={{ backgroundImage: `url('${data.meta.coverImage || data.days[0]?.heroImage}')` }} />
                     <div className="cn-hero-overlay" />
                     <div className="cn-hero-content cn-reveal">
@@ -408,6 +425,8 @@ export default function ThemeCondeNast({
                         </div>
                     </div>
                 </header>
+
+                <OptionalSections data={data} primaryColor={accentColor} />
 
                 {/* Intro */}
                 <section className="cn-section cn-reveal">
@@ -476,14 +495,28 @@ export default function ThemeCondeNast({
                     <p className="cn-price-label">Investment</p>
                     <div className="cn-price-val cn-reveal">{data.meta.price}</div>
                     <p style={{ opacity: 0.5, fontSize: '13px', fontStyle: 'italic', marginBottom: '40px' }} className="cn-reveal">{data.meta.priceNote}</p>
-                    <a
-                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
-                            ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
-                            : `mailto:${data.brand.email}`}
-                        className="cn-cta cn-reveal"
-                    >
-                        Inquire Availability
-                    </a>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+                            {data.whatsappConfig.numbers.map((num, idx) => (
+                                <a key={idx}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    className="cn-cta cn-reveal"
+                                    style={{ width: '100%', maxWidth: 350 }}
+                                >
+                                    Chat with {num.label || 'Contact'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
+                                ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
+                                : `mailto:${data.brand.email}`}
+                            className="cn-cta cn-reveal"
+                        >
+                            Inquire Availability
+                        </a>
+                    )}
 
                     <div className="cn-grid">
                         <div className="cn-reveal">
@@ -507,15 +540,25 @@ export default function ThemeCondeNast({
                         <button onClick={scrollToTop} className="cn-nav-btn" style={{ background: '#1c1917', color: '#fff', width: '40px', height: '40px', borderRadius: '50%' }}>
                             <ArrowUp size={20} />
                         </button>
-                        <a
-                            href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
-                                ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
-                                : `mailto:${data.brand.email}`}
-                            className="cn-book-btn-mini"
-                        >
-                            <MessageCircle size={20} />
-                            <span>Book</span>
-                        </a>
+                        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                            <a
+                                href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+                                className="cn-book-btn-mini"
+                            >
+                                <MessageCircle size={20} />
+                                <span>Chat</span>
+                            </a>
+                        ) : (
+                            <a
+                                href={(data.brand.whatsapp || data.brand.contact?.whatsapp)
+                                    ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}`
+                                    : `mailto:${data.brand.email}`}
+                                className="cn-book-btn-mini"
+                            >
+                                <MessageCircle size={20} />
+                                <span>Book</span>
+                            </a>
+                        )}
                     </div>
                 </div>
             </div>

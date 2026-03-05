@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import html2canvas from 'html2canvas-pro';
 import { ItineraryPayload } from '@/types/itinerary';
+import { Save, Loader2, Image as ImageIcon, Type as TypeIcon, Box, CheckCircle2, AlertCircle } from 'lucide-react';
+import { updateItineraryContent } from '../actions';
 
 type FlyerRatio = '4:5' | '9:16';
 
@@ -50,17 +52,25 @@ const DIMS = {
 export default function FlyerStudio({ data }: FlyerStudioProps) {
     const { brand, meta } = data;
     const canvasRef = useRef<HTMLDivElement>(null);
-    const [ratio, setRatio] = useState<FlyerRatio>('4:5');
+    const [ratio, setRatio] = useState<FlyerRatio>(data.assets_config?.flyer_studio?.ratio || '4:5');
     const [elements, setElements] = useState<CanvasElement[]>([]);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [screenScale, setScreenScale] = useState(1);
     const [downloading, setDownloading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-    // Initial Load Elements (Hanya run SEKALI saat mount, jadi tidak keput saat ubah rasio)
+    // Initial Load Elements
     const initRef = useRef(false);
     useEffect(() => {
         if (initRef.current) return;
         initRef.current = true;
+
+        // Try to load from saved config first
+        if (data.assets_config?.flyer_studio?.elements) {
+            setElements(data.assets_config.flyer_studio.elements);
+            return;
+        }
 
         const initialElements: CanvasElement[] = [];
         let curZ = 1;
@@ -96,7 +106,33 @@ export default function FlyerStudio({ data }: FlyerStudioProps) {
         }
 
         setElements(initialElements);
-    }, [brand, meta]);
+    }, [brand, meta, data.assets_config]);
+
+    const handleSave = async () => {
+        setSaving(true);
+        setSaveStatus('idle');
+        try {
+            const result = await updateItineraryContent(data.id, {
+                assets_config: {
+                    ...data.assets_config,
+                    flyer_studio: {
+                        elements,
+                        ratio
+                    }
+                }
+            });
+            if (result.success) {
+                setSaveStatus('success');
+                setTimeout(() => setSaveStatus('idle'), 3000);
+            } else {
+                setSaveStatus('error');
+            }
+        } catch (err) {
+            setSaveStatus('error');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     // Handle Keyboard Delete
     useEffect(() => {
@@ -241,9 +277,34 @@ export default function FlyerStudio({ data }: FlyerStudioProps) {
                     💡 <b>Tip</b>: Ctrl+V untuk Paste Gambar & Text
                 </div>
 
-                <button onClick={handleDownload} disabled={downloading} style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #1a1a1a, #333)', color: '#fff', borderRadius: 6, fontWeight: 700, fontSize: 12, border: 'none', cursor: downloading ? 'wait' : 'pointer' }}>
-                    {downloading ? '⏳ Rendering...' : '⬇️ Download PNG'}
-                </button>
+                <div style={{ display: 'flex', gap: 10 }}>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        style={{
+                            padding: '8px 16px',
+                            background: saveStatus === 'success' ? '#22C55E' : '#FFFFFF',
+                            color: saveStatus === 'success' ? '#fff' : '#1a1a1a',
+                            borderRadius: 6,
+                            fontWeight: 700,
+                            fontSize: 12,
+                            border: '1px solid rgba(0,0,0,0.1)',
+                            cursor: saving ? 'wait' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            transition: 'all 0.3s'
+                        }}
+                    >
+                        {saving ? <Loader2 size={14} className="animate-spin" /> : saveStatus === 'success' ? <CheckCircle2 size={14} /> : <Save size={14} />}
+                        {saving ? 'Saving...' : saveStatus === 'success' ? 'Saved!' : 'Save Progress'}
+                    </button>
+
+                    <button onClick={handleDownload} disabled={downloading} style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #1a1a1a, #333)', color: '#fff', borderRadius: 6, fontWeight: 700, fontSize: 12, border: 'none', cursor: downloading ? 'wait' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        {downloading ? <Loader2 size={14} className="animate-spin" /> : '⬇️'}
+                        {downloading ? 'Rendering...' : 'Download PNG'}
+                    </button>
+                </div>
             </div>
 
             {/* Workspace */}

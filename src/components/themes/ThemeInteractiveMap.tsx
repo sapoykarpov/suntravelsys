@@ -3,19 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { ItineraryPayload } from '@/types/itinerary';
 import { imageWithFallback } from '@/lib/utils/images';
-import {
-  Navigation,
-  MapPin,
-  Heart,
-  Share2,
-  MessageCircle,
-  Moon,
-  Camera,
-  Coffee,
-  Plane,
-  ChevronRight,
-  Play
-} from 'lucide-react';
+import OptionalSections from '../OptionalSections';
+import { Plane, Coffee, Bus, Camera, MapPin, Calendar, Heart, Share2, Star, Check, Play, Navigation, Info, ChevronRight, X, Moon } from 'lucide-react';
 
 interface Activity {
   time: string;
@@ -134,7 +123,7 @@ export default function ThemeInteractiveMap({
     }
   };
 
-  const primary = data.brand.primaryColor || '#1d4ed8';
+  const primaryColor = data.brand.primaryColor || '#1d4ed8';
 
   return (
     <div className="im-root" ref={containerRef}>
@@ -152,7 +141,7 @@ export default function ThemeInteractiveMap({
           display: flex;
           flex-direction: column;
           align-items: center;
-          --primary: ${primary};
+          --primary: ${primaryColor};
         }
         .im-root * { box-sizing: border-box; max-width: 100%; }
         
@@ -411,6 +400,8 @@ export default function ThemeInteractiveMap({
         {/* HERO */}
         <section className="im-hero im-fade-in im-fade-in-active" style={{
           justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
+          minHeight: '80vh',
+          padding: '100px 24px'
         }}>
           <div className="im-badge">
             <Navigation size={14} aria-hidden="true" />
@@ -504,7 +495,9 @@ export default function ThemeInteractiveMap({
           })}
         </main>
 
-        {/* PRICING SECTION */}
+        <OptionalSections data={data} primaryColor={primaryColor} />
+
+        {/* PRICE & BOOKING */}
         <section className="im-price-deck im-fade-in">
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <h3 className="font-montserrat" style={{ fontSize: '14px', fontWeight: 700, opacity: 0.4, marginBottom: 12, textTransform: 'uppercase', letterSpacing: '1px' }}>
@@ -512,6 +505,26 @@ export default function ThemeInteractiveMap({
             </h3>
             <div className="im-price">{data.meta.price}</div>
             <p className="im-price-note">{data.meta.priceNote}</p>
+          </div>
+
+          <div style={{ marginBottom: 40 }}>
+            {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {data.whatsappConfig.numbers.map((num, i) => (
+                  <a key={i}
+                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                    className="im-btn-cta"
+                    style={{ height: 48, justifyContent: 'center' }}
+                  >
+                    Chat with {num.label || 'Contact'} <ChevronRight size={14} aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <a href={contactLink} className="im-btn-cta" style={{ height: 48, justifyContent: 'center' }}>
+                Reserve Now <ChevronRight size={14} aria-hidden="true" />
+              </a>
+            )}
           </div>
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 32 }}>
@@ -556,15 +569,25 @@ export default function ThemeInteractiveMap({
           </button>
         </div>
 
-        <a
-          href={contactLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="im-btn-cta"
-          aria-label="Book this itinerary via WhatsApp"
-        >
-          Book Now <ChevronRight size={14} aria-hidden="true" />
-        </a>
+        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+          <a
+            href={`https://wa.me/${data.whatsappConfig.numbers[0].number.replace(/[^0-9]/g, '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="im-btn-cta"
+          >
+            Contact Us <ChevronRight size={14} aria-hidden="true" />
+          </a>
+        ) : (
+          <a
+            href={contactLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="im-btn-cta"
+          >
+            Book Now <ChevronRight size={14} aria-hidden="true" />
+          </a>
+        )}
       </nav>
 
       {/* Video Modal */}

@@ -65,10 +65,10 @@ LANGUAGE REQUIREMENT:
 
 STYLE REQUIREMENT:
 - Style: ${style}.
-- Original: Preserve exact wording and tone of the source text, but apply brand name replacement and language translation.
-- Friendly: Warm, welcoming, and accessible.
-- Persuasive: Sales-oriented, highlighting exclusivity and value.
-- Energetic: Exciting, dynamic, and adventurous.
+- Original: KEEP IT RAW. Preserve exact wording, tone, and formatting of the source text. Only apply brand replacement and translation.
+- Friendly: Transform into a warm, inviting, and community-focused narrative. Use words like "explore together", "your home away from home", and "we'll discover". Tone should be like a knowledgeable friend.
+- Persuasive: Focus on ROI, exclusivity, and "once-in-a-lifetime" appeal. Use high-impact adjectives (luxurious, elite, unparalleled). Highlight why THIS specific itinerary is better than any other. Focus on benefits and transformations.
+- Energetic: High-tempo, exciting, and FOMO-driven. Use short, punchy sentences. Focus on action: "Race through...", "Dive into...", "Experience the thrill!". Use plenty of active verbs.
 
 ALWAYS respond with ONLY valid JSON matching the schema. No markdown, no explanation, just JSON.`;
 

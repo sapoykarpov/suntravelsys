@@ -50,6 +50,30 @@ export default function ThemeViralTiktok({
         });
     });
 
+    if (data.departurePeriods?.enabled && data.departurePeriods.items.length > 0) {
+        slides.push({
+            type: 'periods',
+            items: data.departurePeriods.items,
+            videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-flying-over-the-clouds-at-sunset-40236-large.mp4'
+        });
+    }
+
+    if (data.testimonials?.enabled && data.testimonials.items.length > 0) {
+        slides.push({
+            type: 'testimonials',
+            items: data.testimonials.items,
+            videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-white-sand-beach-and-palm-trees-1564-large.mp4'
+        });
+    }
+
+    if (data.gallery?.enabled && data.gallery.items.length > 0) {
+        slides.push({
+            type: 'gallery',
+            items: data.gallery.items,
+            videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-beach-shore-1563-large.mp4'
+        });
+    }
+
     slides.push({
         type: 'deck',
         title: "READY FOR TAKEOFF?",
@@ -231,9 +255,9 @@ export default function ThemeViralTiktok({
                             src={slide.videoUrl}
                         />
                         <div className="vt-overlay" style={{
-                            justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'center' ? 'center' : 'flex-end',
-                            paddingTop: data.coverTextSettings?.position === 'top' ? '80px' : '24px',
-                            paddingBottom: data.coverTextSettings?.position === 'bottom' ? '140px' : '24px',
+                            justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
+                            paddingTop: data.coverTextSettings?.position === 'top' ? '120px' : '24px',
+                            paddingBottom: data.coverTextSettings?.position === 'bottom' ? '160px' : '24px',
                         }}>
                             {slide.type === 'hero' && (
                                 <div style={{ opacity: activeScreen === idx ? 1 : 0, transition: '0.5s' }}>
@@ -265,6 +289,58 @@ export default function ThemeViralTiktok({
                                     </div>
                                     <h2 className="vt-title">Day {slide.day}: {slide.title}</h2>
                                     <p style={{ fontSize: '14px', lineHeight: 1.6, fontWeight: 300 }}>{slide.desc}</p>
+                                </div>
+                            )}
+
+                            {slide.type === 'periods' && (
+                                <div style={{ opacity: activeScreen === idx ? 1 : 0, transition: '0.5s', width: '100%' }}>
+                                    <h2 className="vt-title">JADWAL TRIP</h2>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                        {slide.items.map((p: any, i: number) => (
+                                            <div key={i} className="vt-glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                    <span style={{ fontSize: '9px', fontWeight: 700, opacity: 0.6, textTransform: 'uppercase' }}>Tanggal</span>
+                                                    <span style={{ fontWeight: 800 }}>{p.date}</span>
+                                                </div>
+                                                {p.price && (
+                                                    <div style={{ textAlign: 'right' }}>
+                                                        <span style={{ fontSize: '9px', fontWeight: 700, opacity: 0.6, textTransform: 'uppercase' }}>Harga</span>
+                                                        <div style={{ color: primary, fontWeight: 900 }}>{p.price}</div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {slide.type === 'testimonials' && (
+                                <div style={{ opacity: activeScreen === idx ? 1 : 0, transition: '0.5s' }}>
+                                    <h2 className="vt-title">GUESTS LOVE IT</h2>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                        {slide.items.map((t: any, i: number) => (
+                                            <div key={i} className="vt-glass-card" style={{ padding: '16px' }}>
+                                                <p style={{ fontSize: '13px', fontStyle: 'italic', marginBottom: 10 }}>"{t.text}"</p>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    {t.avatar && <img src={t.avatar} style={{ width: 24, height: 24, borderRadius: '50%' }} alt="" />}
+                                                    <span style={{ fontSize: '11px', fontWeight: 700 }}>{t.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {slide.type === 'gallery' && (
+                                <div style={{ opacity: activeScreen === idx ? 1 : 0, transition: '0.5s', width: '100%' }}>
+                                    <h2 className="vt-title">MOMENTS</h2>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                                        {slide.items.slice(0, 4).map((item: any, i: number) => (
+                                            <div key={i} style={{ aspectRatio: '1/1', borderRadius: 12, overflow: 'hidden' }}>
+                                                <img src={item.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
@@ -307,12 +383,26 @@ export default function ThemeViralTiktok({
             </div>
 
             <div className="vt-bottom-bar">
-                <a
-                    href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
-                    className="vt-cta"
-                >
-                    Book Now
-                </a>
+                {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {data.whatsappConfig.numbers.map((num, idx) => (
+                            <a key={idx}
+                                href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                className="vt-cta"
+                                style={{ padding: '12px', fontSize: '12px' }}
+                            >
+                                Chat with {num.label || 'Contact'}
+                            </a>
+                        ))}
+                    </div>
+                ) : (
+                    <a
+                        href={(data.brand.whatsapp || data.brand.contact?.whatsapp) ? `https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)!.replace(/[^0-9]/g, '')}` : `mailto:${data.brand.email}`}
+                        className="vt-cta"
+                    >
+                        Book Now
+                    </a>
+                )}
             </div>
         </div>
     );

@@ -18,6 +18,7 @@ import {
     Play
 } from 'lucide-react';
 import { ItineraryPayload } from '@/types/itinerary';
+import OptionalSections from '../OptionalSections';
 
 export default function ThemeUmrohEvent({
     data,
@@ -179,7 +180,11 @@ export default function ThemeUmrohEvent({
 
             <div className="ue-container">
                 <header className="ue-hero" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: data.coverTextSettings?.position === 'top' ? 'flex-start' : data.coverTextSettings?.position === 'bottom' ? 'flex-end' : 'center',
+                    minHeight: '85vh',
+                    padding: '120px 24px'
                 }}>
                     <img src={data.meta.coverImage || data.days[0]?.heroImage} className="ue-hero-img" alt="" />
                     <div className="ue-hero-overlay" />
@@ -248,17 +253,32 @@ export default function ThemeUmrohEvent({
                     </div>
                 </section>
 
+                <OptionalSections data={data} primaryColor={gold} />
+
                 <section className="ue-section">
                     <div className="ue-price-card">
                         <div style={{ fontSize: '11px', fontWeight: 700, color: gold, letterSpacing: 2, marginBottom: 12 }}>INVESTASI PERJALANAN</div>
                         <div className="ue-price-val">{data.meta.price}</div>
                         <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', marginBottom: 32 }}>{data.meta.groupSize}</p>
-                        <a
-                            href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
-                            style={{ display: 'block', background: gold, color: '#1a1a2e', padding: '16px', borderRadius: '50px', fontWeight: 900, textDecoration: 'none', letterSpacing: 2 }}
-                        >
-                            DAFTAR SEKARANG
-                        </a>
+                        {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                            <div className="grid gap-3">
+                                {data.whatsappConfig.numbers.map((num, i) => (
+                                    <a key={i}
+                                        href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                        style={{ display: 'block', background: gold, color: '#1a1a2e', padding: '16px', borderRadius: '50px', fontWeight: 900, textDecoration: 'none', letterSpacing: 2 }}
+                                    >
+                                        CHAT {num.label?.toUpperCase() || 'OFFICE'}
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <a
+                                href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
+                                style={{ display: 'block', background: gold, color: '#1a1a2e', padding: '16px', borderRadius: '50px', fontWeight: 900, textDecoration: 'none', letterSpacing: 2 }}
+                            >
+                                DAFTAR SEKARANG
+                            </a>
+                        )}
                     </div>
                 </section>
 
@@ -284,20 +304,35 @@ export default function ThemeUmrohEvent({
 
             <div className={`ue-footer-bar ${!isCoverVisible ? 'v-active' : ''}`}>
                 <div className="ue-footer-inner">
-                    <div style={{ display: 'flex', gap: 12 }}>
-                        <a
-                            href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
-                            style={{ background: '#10b981', width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
-                        >
-                            <MessageCircle size={22} fill="currentColor" />
-                        </a>
-                        <a
-                            href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
-                            className="ue-book-btn"
-                        >
-                            Hubungi Kami
-                        </a>
-                    </div>
+                    {data.whatsappConfig?.enabled && data.whatsappConfig.numbers.length > 0 ? (
+                        <div className="flex gap-2 py-1">
+                            {data.whatsappConfig.numbers.slice(0, 2).map((num, i) => (
+                                <a key={i}
+                                    href={`https://wa.me/${num.number.replace(/[^0-9]/g, '')}`}
+                                    className="ue-book-btn"
+                                    style={{ padding: '10px 16px', fontSize: '10px' }}
+                                >
+                                    Chat {num.label || 'Us'}
+                                </a>
+                            ))}
+                        </div>
+                    ) : (
+                        <div style={{ display: 'flex', gap: 12 }}>
+                            <a
+                                href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
+                                style={{ background: '#10b981', width: 44, height: 44, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}
+                            >
+                                <MessageCircle size={20} fill="currentColor" />
+                            </a>
+                            <a
+                                href={`https://wa.me/${(data.brand.whatsapp || data.brand.contact?.whatsapp)?.replace(/[^0-9]/g, '')}`}
+                                className="ue-book-btn"
+                                style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                                Hubungi Kami
+                            </a>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
