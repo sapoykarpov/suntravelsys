@@ -59,9 +59,33 @@ function generateSeries(data: ItineraryPayload) {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { agentSlug, itineraryId, seriesId } = await params;
+    const { getItineraryById } = await import('@/lib/supabase/queries');
+    const data = await getItineraryById(itineraryId);
+
+    if (!data) return { title: 'Blog Not Found' };
+
+    const allSeries = generateSeries(data);
+    const series = allSeries[seriesId];
+    if (!series) return { title: 'Series Not Found' };
+
+    const ogImage = series.slides.find(s => s.image)?.image || data.meta.coverImage || data.days[0]?.heroImage;
+
     return {
-        title: `Travel Blog | ${agentSlug}`,
-        description: `Micro-blog perjalanan — ${seriesId}`,
+        title: `${series.title} | ${data.brand.name}`,
+        description: `${series.angle} — ${data.meta.title}`,
+        openGraph: {
+            title: `${series.title}: ${data.meta.title}`,
+            description: series.angle,
+            images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+            type: 'article',
+            siteName: data.brand.name,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: series.title,
+            description: series.angle,
+            images: ogImage ? [ogImage] : [],
+        }
     };
 }
 

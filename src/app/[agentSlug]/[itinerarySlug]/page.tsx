@@ -21,14 +21,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: 'Itinerary Not Found' };
     }
 
+    const ogImage = data.meta.coverImage || data.days[0]?.heroImage;
+
     return {
         title: `${data.meta.title} — ${data.brand.name}`,
         description: `${data.meta.subtitle}. ${data.meta.durationDays} Days curated by ${data.brand.name}.`,
         openGraph: {
-            title: `${data.meta.title} — ${data.brand.name}`,
-            description: data.meta.subtitle,
-            images: data.days[0]?.heroImage ? [data.days[0].heroImage] : [],
+            title: data.meta.title,
+            description: `${data.meta.subtitle} • ${data.meta.durationDays} Hari Perjalanan`,
+            images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: data.meta.title }] : [],
+            type: 'website',
+            siteName: data.brand.name,
         },
+        twitter: {
+            card: 'summary_large_image',
+            title: data.meta.title,
+            description: data.meta.subtitle,
+            images: ogImage ? [ogImage] : [],
+        }
     };
 }
 
